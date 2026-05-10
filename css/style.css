@@ -169,8 +169,8 @@ header.scrolled {
 /* Glamour logo — shimmer gradient text */
 .logo {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.65rem;
-    font-weight: 700;
+    font-size: 1.45rem;
+    font-weight: 500;
     letter-spacing: 3px;
     text-transform: uppercase;
     cursor: pointer;
