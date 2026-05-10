@@ -31,18 +31,30 @@
                     <div class="logo-subtitle">Wedding Planner</div>
                 </div>
             </div>
+
+            <<button 
+                class="nav-toggle" 
+                id="navToggle"
+                aria-label="Toggle navigation"
+                aria-expanded="false">
+                
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        
             <nav>
-                <a href="index.html">Beranda</a>
+                <a href="index.html" class="active">Beranda</a>
                 <a href="paket.html">Layanan</a>
                 <div id="authLinks" style="display: flex; gap: 1rem;">
                     <a href="register.html">Daftar</a>
                     <a href="login.html">Masuk</a>
                 </div>
                 <div id="userMenu" style="display: none; gap: 1rem;">
-                    <a href="booking.html" class="active">Booking</a>
+                    <a href="booking.html">Booking</a>
                     <a href="tracking.html">Tracking</a>
-                    <span id="userNameDisplay"></span>
                     <a href="#" onclick="handleLogout(event)">Logout</a>
+                    <span id="userNameDisplay"></span>
                 </div>
             </nav>
         </div>
