@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Pernikahan - LOKA NIKAH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                LOKA NIKAH
+                <div class="logo-subtitle">Wedding Planner</div>
+            </a>
+            <nav>
+                <a href="index.html">Beranda</a>
+                <a href="paket.html">Layanan</a>
+                <div id="authLinks" style="display: flex; gap: 1rem;">
+                    <a href="register.html">Daftar</a>
+                    <a href="login.html">Masuk</a>
+                </div>
+                <div id="userMenu" style="display: none; gap: 1rem;">
+                    <a href="booking.html" class="active">Booking</a>
+                    <a href="tracking.html">Tracking</a>
+                    <span id="userNameDisplay"></span>
+                    <a href="#" onclick="handleLogout(event)">Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container-md">
+            <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">Reservasi Tanggal Bahagia Anda</h1>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Isi form di bawah untuk melakukan pemesanan paket pernikahan impianmu.</p>
+
+            <div style="background: var(--light); padding: 2.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+                <div id="bookingMessage"></div>
+
+                <form id="bookingForm">
+                    <!-- Step 1: Personal Info -->
+                    <div class="form-section" id="step1">
+                        <h3 style="color: var(--primary); font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 1.5rem;">Informasi Pengantin</h3>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="booking-name">Nama Pengantin *</label>
+                                <input type="text" id="booking-name" name="name" placeholder="Nama lengkap pengantin pertama" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="booking-partner">Nama Pasangan *</label>
+                                <input type="text" id="booking-partner" name="partner" placeholder="Nama lengkap pengantin kedua" required>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="booking-email">Email *</label>
+                                <input type="email" id="booking-email" name="email" placeholder="email@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="booking-phone">Nomor Telepon *</label>
+                                <input type="tel" id="booking-phone" name="phone" placeholder="0831-xxxxxxxxx" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Wedding Details -->
+                    <div class="form-section" id="step2" style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--secondary);">
+                        <h3 style="color: var(--primary); font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 1.5rem;">Rincian Acara</h3>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="booking-date">Tanggal Pernikahan *</label>
+                                <input type="date" id="booking-date" name="date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="booking-location">Lokasi Acara *</label>
+                                <input type="text" id="booking-location" name="location" placeholder="Kota/Tempat acara" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="booking-venue">Nama Venue/Tempat (Opsional)</label>
+                            <input type="text" id="booking-venue" name="venue" placeholder="Nama hotel, gedung, atau venue">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="booking-guests">Jumlah Tamu (estimasi) *</label>
+                            <input type="number" id="booking-guests" name="guests" min="50" placeholder="Minimal 50 orang" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="booking-time">Jam Acara *</label>
+                            <input type="time" id="booking-time" name="time" required>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Packages -->
+                    <div class="form-section" id="step3" style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--secondary);">
+                        <h3 style="color: var(--primary); font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 1.5rem;">Paket yang Diinginkan</h3>
+
+                        <div class="form-group">
+                            <label for="booking-package">Pilih Paket *</label>
+                            <select id="booking-package" name="package" required>
+                                <option value="">-- Pilih Paket --</option>
+                                <option value="catering">Catering Eksklusif</option>
+                                <option value="makeup">MUA by Loka Team - Soft Glam</option>
+                                <option value="fotografi">Fotografer Premium</option>
+                                <option value="dekorasi">Dekorasi Minimalis</option>
+                                <option value="entertainment">Entertainment & MC Profesional</option>
+                                <option value="undangan">Undangan Desain Custom</option>
+                                <option value="paket-bundle">Paket Bundle (Multiple Vendor)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center;">
+                                <input type="checkbox" id="booking-multiple" name="multiple" style="margin-right: 0.5rem;">
+                                <span>Saya ingin mepesan lebih dari satu paket</span>
+                            </label>
+                        </div>
+
+                        <div id="additionalPackages" style="display: none; margin-top: 1rem;">
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Pilih paket tambahan:</p>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" name="packages" value="catering">
+                                    <span style="margin-left: 0.5rem;">Catering</span>
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" name="packages" value="makeup">
+                                    <span style="margin-left: 0.5rem;">Makeup Artist</span>
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" name="packages" value="fotografi">
+                                    <span style="margin-left: 0.5rem;">Fotografer</span>
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" name="packages" value="dekorasi">
+                                    <span style="margin-left: 0.5rem;">Dekorasi</span>
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" name="packages" value="entertainment">
+                                    <span style="margin-left: 0.5rem;">Entertainment</span>
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" name="packages" value="undangan">
+                                    <span style="margin-left: 0.5rem;">Undangan</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Additional Info -->
+                    <div class="form-section" id="step4" style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--secondary);">
+                        <h3 style="color: var(--primary); font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 1.5rem;">Informasi Tambahan</h3>
+
+                        <div class="form-group">
+                            <label for="booking-theme">Tema/Konsep Pernikahan (Opsional)</label>
+                            <input type="text" id="booking-theme" name="theme" placeholder="Misal: Minimalis Modern, Rustic, Classic, dll">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="booking-budget">Budget Estimasi (Opsional)</label>
+                            <input type="text" id="booking-budget" name="budget" placeholder="Misal: 500 juta - 1 miliar">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="booking-notes">Catatan Khusus / Permintaan Spesial</label>
+                            <textarea id="booking-notes" name="notes" placeholder="Ceritakan detail tentang pernikahan impian Anda, preferensi khusus, atau pertanyaan apapun..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Terms -->
+                    <div style="margin-top: 2rem; padding: 1.5rem; background: var(--secondary); border-radius: 8px;">
+                        <label style="display: flex; align-items: flex-start;">
+                            <input type="checkbox" id="booking-agree" name="agree" required style="margin-right: 0.5rem; margin-top: 0.3rem;">
+                            <span style="font-size: 0.9rem;">
+                                Saya setuju bahwa data saya akan digunakan untuk proses booking dan komunikasi dengan vendor. Saya juga memahami <a href="#" style="color: var(--primary);">Syarat & Ketentuan</a> yang berlaku.
+                            </span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" style="margin-top: 2rem; padding: 1rem; font-size: 1rem;">
+                        Konfirmasi Booking
+                    </button>
+                </form>
+            </div>
+
+            <!-- Info Box -->
+            <div style="background: var(--secondary); padding: 2rem; border-radius: 12px; margin-top: 2rem;">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">ℹ️ Informasi Penting</h3>
+                <ul style="color: var(--dark); line-height: 1.8;">
+                    <li>✓ Booking harus dilakukan oleh salah satu dari kedua pengantin</li>
+                    <li>✓ Tim kami akan menghubungi Anda dalam 24 jam untuk konfirmasi</li>
+                    <li>✓ Tanggal yang sudah di-booking tidak dapat diubah tanpa proses tertentu</li>
+                    <li>✓ Pembayaran akan diklarifikasi saat meeting dengan vendor</li>
+                    <li>✓ Dapatkan konsultasi gratis dengan vendor pilihan Anda</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Tentang Loka Nikah</h4>
+                <p style="font-size: 0.9rem; line-height: 1.6;">
+                    Kami adalah solusi modern untuk merencanakan pernikahan impian Anda dengan mudah, transparan, dan elegan.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Layanan</h4>
+                <ul>
+                    <li><a href="paket.html">Katalog Layanan</a></li>
+                    <li><a href="booking.html">Booking Online</a></li>
+                    <li><a href="tracking.html">Tracking Progres</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Kontak</h4>
+                <ul>
+                    <li>
+                        <i class="fa-solid fa-phone"></i>
+                        (021) 1234-NIKAH
+                    </li>
+
+                    <li>
+                        <i class="fa-brands fa-whatsapp"></i>
+                        +62 812-XXXX-XXXX
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-envelope"></i>
+                        hello@lokanikah.com
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Follow Kami</h4>
+
+                <ul>
+                    <li>
+                        <a href="#">
+                            <i class="fa-brands fa-instagram"></i>
+                            Instagram
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-brands fa-tiktok"></i>
+                            TikTok
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-brands fa-facebook"></i>
+                            Facebook
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <p><strong>Loka Nikah © 2026</strong></p>
+
+        <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.9;">
+            Merapikan mimpi, mewujudkan janji.
+        </p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        // Check authentication
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!lokaAuth.isAuthenticated()) {
+                showAlert('Anda harus login untuk booking. Redirecting...', 'warning');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            }
+
+            // Fill current user data
+            const user = lokaAuth.getCurrentUser();
+            if (user) {
+                document.getElementById('booking-email').value = user.email;
+                document.getElementById('booking-phone').value = user.phone;
+                document.getElementById('booking-name').value = user.name;
+            }
+
+            // Set package from URL if provided
+            const paket = getBookingPackageFromURL();
+            if (paket) {
+                setBookingPackage(paket);
+            }
+        });
+
+        // Toggle multiple packages checkbox
+        document.getElementById('booking-multiple').addEventListener('change', function() {
+            document.getElementById('additionalPackages').style.display = this.checked ? 'block' : 'none';
+        });
+
+        // Handle form submission
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            clearFormErrors('bookingForm');
+
+            // Get form data
+            const formData = {
+                names: document.getElementById('booking-name').value,
+                partner: document.getElementById('booking-partner').value,
+                date: document.getElementById('booking-date').value,
+                location: document.getElementById('booking-location').value,
+                guests: document.getElementById('booking-guests').value,
+                packages: document.getElementById('booking-package').value,
+                notes: document.getElementById('booking-notes').value
+            };
+
+            // Validate
+            if (!formData.names || !formData.partner || !formData.date || !formData.location || !formData.guests || !formData.packages) {
+                showAlert('Semua field yang diperlukan harus diisi!', 'error');
+                return;
+            }
+
+            // Create booking
+            const result = lokaAuth.createBooking(formData);
+
+            if (result.success) {
+                const messageDiv = document.getElementById('bookingMessage');
+                messageDiv.innerHTML = `<div class="alert alert-success">
+                    ✓ ${result.message} Tanggal pernikahan Anda: <strong>${formatDateOnly(formData.date)}</strong>
+                </div>`;
+                
+                showAlert(result.message, 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'tracking.html';
+                }, 3000);
+            } else {
+                showAlert(result.message, 'error');
+            }
+        });
+
+        // Handle logout
+        function handleLogout(e) {
+            e.preventDefault();
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                lokaAuth.logout();
+                updateNavbarUser();
+                showAlert('Logout berhasil!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>

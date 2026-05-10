@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - LOKA NIKAH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                LOKA NIKAH
+                <div class="logo-subtitle">Wedding Planner</div>
+            </a>
+            <nav>
+                <a href="index.html">Beranda</a>
+                <a href="paket.html">Layanan</a>
+                <a href="register.html" class="active">Daftar</a>
+                <a href="login.html">Masuk</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container-sm">
+            <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; text-align: center;">Daftar Akun Baru</h1>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Bergabunglah dengan ribuan pasangan yang telah merencanakan pernikahan impian mereka bersama Loka Nikah.</p>
+
+            <div style="background: var(--light); padding: 2.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="reg-name">Nama Lengkap *</label>
+                        <input type="text" id="reg-name" name="name" placeholder="Masukkan nama lengkap Anda" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-email">Email *</label>
+                        <input type="email" id="reg-email" name="email" placeholder="contoh@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-phone">Nomor Telepon *</label>
+                        <input type="tel" id="reg-phone" name="phone" placeholder="08xx-xxxx-xxxx" required>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="reg-password">Password *</label>
+                            <input type="password" id="reg-password" name="password" placeholder="Minimal 6 karakter" required>
+                            <p class="form-hint">Password harus setidaknya 6 karakter</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-confirm">Konfirmasi Password *</label>
+                            <input type="password" id="reg-confirm" name="confirm" placeholder="Ulangi password Anda" required>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <input type="checkbox" id="reg-agree" name="agree" required style="margin-right: 0.5rem;">
+                        <label for="reg-agree" style="margin: 0; font-size: 0.9rem;">
+                            Saya setuju dengan <a href="#" style="color: var(--primary);">Syarat & Ketentuan</a> dan <a href="#" style="color: var(--primary);">Kebijakan Privasi</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Daftar Sekarang</button>
+                </form>
+
+                <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted);">
+                    Sudah punya akun? <a href="login.html" style="color: var(--primary); font-weight: 600;">Masuk di sini</a>
+                </p>
+            </div>
+
+            <!-- Benefits -->
+            <div style="margin-top: 3rem;">
+                <h3 style="color: var(--primary); text-align: center; margin-bottom: 2rem; font-family: 'Cormorant Garamond', serif; font-size: 1.5rem;">Dapatkan Akses ke</h3>
+                <div class="grid grid-2">
+                    <div style="text-align: center;">
+                        <p style="font-size: 2rem; margin-bottom: 0.5rem;">📋</p>
+                        <p style="color: var(--dark); font-weight: 600; margin-bottom: 0.5rem;">Katalog Lengkap</p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Akses ke 50+ vendor pilihan untuk pernikahan Anda</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <p style="font-size: 2rem; margin-bottom: 0.5rem;">📅</p>
+                        <p style="color: var(--dark); font-weight: 600; margin-bottom: 0.5rem;">Booking Online</p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Pesan vendor dengan mudah dan cepat</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <p style="font-size: 2rem; margin-bottom: 0.5rem;">📊</p>
+                        <p style="color: var(--dark); font-weight: 600; margin-bottom: 0.5rem;">Tracking Progres</p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Pantau persiapan pernikahan Anda secara real-time</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <p style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</p>
+                        <p style="color: var(--dark); font-weight: 600; margin-bottom: 0.5rem;">Support 24/7</p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Tim customer service siap membantu kapan saja</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>Loka Nikah © 2026</strong></p>
+        <div class="footer-divider"></div>
+        <p>Merapikan mimpi, mewujudkan janji.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        const registerForm = document.getElementById('registerForm');
+
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            clearFormErrors('registerForm');
+
+            // Get form data
+            const formData = {
+                name: document.getElementById('reg-name').value,
+                email: document.getElementById('reg-email').value,
+                phone: document.getElementById('reg-phone').value,
+                password: document.getElementById('reg-password').value,
+                confirm: document.getElementById('reg-confirm').value
+            };
+
+            // Validate email format
+            if (!isValidEmail(formData.email)) {
+                showFormError('reg-email', 'Format email tidak valid');
+                return;
+            }
+
+            // Validate phone
+            if (!isValidPhone(formData.phone)) {
+                showFormError('reg-phone', 'Format nomor telepon tidak valid');
+                return;
+            }
+
+            // Register user
+            const result = lokaAuth.register(formData);
+
+            if (result.success) {
+                showAlert(result.message, 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            } else {
+                showAlert(result.message, 'error');
+            }
+        });
+    </script>
+</body>
+</html>

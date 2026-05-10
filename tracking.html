@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracking Progres - LOKA NIKAH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                LOKA NIKAH
+                <div class="logo-subtitle">Wedding Planner</div>
+            </a>
+            <nav>
+                <a href="index.html">Beranda</a>
+                <a href="paket.html">Layanan</a>
+                <div id="authLinks" style="display: flex; gap: 1rem;">
+                    <a href="register.html">Daftar</a>
+                    <a href="login.html">Masuk</a>
+                </div>
+                <div id="userMenu" style="display: none; gap: 1rem;">
+                    <a href="booking.html">Booking</a>
+                    <a href="tracking.html" class="active">Tracking</a>
+                    <span id="userNameDisplay"></span>
+                    <a href="#" onclick="handleLogout(event)">Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">Laporan Progres Persiapan</h1>
+            <p class="text-muted" style="margin-bottom: 2rem;">Pantau perkembangan persiapan menuju Hari-H kamu dengan timeline yang jelas dan terukur.</p>
+
+            <!-- Booking Summary -->
+            <div id="bookingInfo">
+                <div style="text-align: center; background: var(--secondary); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--primary); margin-bottom: 1rem;">Pernikahan Anda</h2>
+                    <p style="color: var(--dark); font-weight: 600; font-size: 1.1rem;" id="trackingDate">
+                        Silakan lakukan booking terlebih dahulu untuk melihat progres
+                        <div style="margin-top: 1rem;">
+                        <a href="booking.html" class="btn btn-primary" id="firstBookingBtn"> Buat Booking Pertama </a>
+                    </div>
+                    </p>
+                    
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div id="progressSection" style="display: none; margin-bottom: 2rem;">
+                <h3 style="color: var(--primary); font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 1rem;">Progress Keseluruhan</h3>
+                <div style="background: var(--bg-light); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="color: var(--dark); font-weight: 600;">Persiapan Selesai:</span>
+                        <span id="progressPercent" style="color: var(--primary); font-weight: 600;">0%</span>
+                    </div>
+                    <div style="width: 100%; height: 8px; background: var(--secondary); border-radius: 4px; overflow: hidden;">
+                        <div id="progressBar" style="height: 100%; background: var(--primary); width: 0%; transition: width 0.3s ease;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="timeline" id="timeline">
+                <!-- Timeline items akan diload via JavaScript -->
+            </div>
+
+            <!-- Contact Section -->
+            <div id="contactSection" style="display: none; background: var(--secondary); padding: 2rem; border-radius: 12px; margin-top: 3rem; text-align: center;">
+                <h3 style="color: var(--primary); font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin-bottom: 1rem;">Pertanyaan atau Kendala?</h3>
+                <p style="color: var(--dark); margin-bottom: 1.5rem;">Hubungi tim customer service kami kapan saja untuk bantuan dan konsultasi.</p>
+                <div class="grid grid-2">
+                    <div style="background: var(--light); padding: 1.5rem; border-radius: 8px;">
+                        <p style="font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">📞 Telepon</p>
+                        <p style="color: var(--dark);">(021) 1234-NIKAH</p>
+                    </div>
+                    <div style="background: var(--light); padding: 1.5rem; border-radius: 8px;">
+                        <p style="font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;">💬 WhatsApp</p>
+                        <p style="color: var(--dark);">+62 812-XXXX-XXXX</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" style="text-align: center; padding: 3rem 0;">
+                <p style="font-size: 3rem; margin-bottom: 1rem;">📅</p>
+                <h3 style="color: var(--primary); font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin-bottom: 0.5rem;">Belum Ada Booking</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Anda belum melakukan booking untuk melihat timeline progres persiapan pernikahan.</p>
+                <a href="booking.html" class="btn btn-primary">Mulai Booking Sekarang</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Tentang Loka Nikah</h4>
+                <p style="font-size: 0.9rem; line-height: 1.6;">
+                    Kami adalah solusi modern untuk merencanakan pernikahan impian Anda dengan mudah, transparan, dan elegan.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Layanan</h4>
+                <ul>
+                    <li><a href="paket.html">Katalog Layanan</a></li>
+                    <li><a href="booking.html">Booking Online</a></li>
+                    <li><a href="tracking.html">Tracking Progres</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Kontak</h4>
+                <ul>
+                    <li>
+                        <i class="fa-solid fa-phone"></i>
+                        (021) 1234-NIKAH
+                    </li>
+
+                    <li>
+                        <i class="fa-brands fa-whatsapp"></i>
+                        +62 812-XXXX-XXXX
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-envelope"></i>
+                        hello@lokanikah.com
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Follow Kami</h4>
+
+                <ul>
+                    <li>
+                        <a href="#">
+                            <i class="fa-brands fa-instagram"></i>
+                            Instagram
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-brands fa-tiktok"></i>
+                            TikTok
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-brands fa-facebook"></i>
+                            Facebook
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <p><strong>Loka Nikah © 2026</strong></p>
+
+        <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.9;">
+            Merapikan mimpi, mewujudkan janji.
+        </p>
+    </footer>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        // Check authentication
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!lokaAuth.isAuthenticated()) {
+                showAlert('Anda harus login untuk melihat tracking. Redirecting...', 'warning');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            } else {
+                loadTrackingData();
+            }
+        });
+
+        // Load tracking data
+        // Load tracking data
+        function loadTrackingData() {
+            const bookings = lokaAuth.getUserBookings();
+            const firstBookingBtn = document.getElementById('firstBookingBtn');
+
+            if (bookings.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                document.getElementById('progressSection').style.display = 'none';
+                document.getElementById('timeline').innerHTML = '';
+                document.getElementById('contactSection').style.display = 'none';
+
+                // tombol tampil kalau belum ada booking
+                if (firstBookingBtn) {
+                    firstBookingBtn.style.display = 'inline-block';
+                }
+
+                return;
+            }
+
+            // tombol hilang kalau sudah ada booking
+            if (firstBookingBtn) {
+                firstBookingBtn.style.display = 'none';
+            }
+
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('contactSection').style.display = 'block';
+
+            // Load latest booking
+            const latestBooking = bookings[bookings.length - 1];
+            loadBookingTimeline(latestBooking);
+
+            // If multiple bookings, show option to switch
+            if (bookings.length > 1) {
+                loadBookingSwitcher(bookings);
+            }
+        }
+
+        // Load booking timeline
+        function loadBookingTimeline(booking) {
+            const dateObj = new Date(booking.date);
+            const formattedDate = dateObj.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            document.getElementById('trackingDate').innerHTML = `
+                <strong>${booking.names} & ${booking.partner}</strong><br>
+                Tanggal: ${formattedDate}<br>
+                Lokasi: ${booking.location}<br>
+                Jumlah Tamu: ${booking.guests} orang
+            `;
+
+            // Build timeline
+            const timeline = booking.timeline;
+            const stages = [
+                { key: 'confirmation', label: 'Konfirmasi Booking', emoji: '✓', description: 'Booking paket dan vendor telah dikonfirmasi. Proses admin sedang berlangsung.' },
+                { key: 'fitting', label: 'Fitting & Konsultasi', emoji: '📋', description: 'Meeting dengan vendor untuk diskusi tema, design, dan detail pernikahan.' },
+                { key: 'deal', label: 'Vendor Deal & Kesepakatan', emoji: '🤝', description: 'Semua vendor telah menyelesaikan briefing dan persiapan material untuk acara.' },
+                { key: 'technical', label: 'Technical Meeting', emoji: '⚙️', description: 'Meeting teknis final untuk memastikan semua dekorasi, catering, dan dokumentasi siap optimal.' },
+                { key: 'wedding', label: 'Hari Pernikahan (H-Day)', emoji: '💍', description: 'Wujudkan impian pernikahan Anda bersama Loka Nikah. Semoga lancar dan bahagia!' }
+            ];
+
+            let timelineHTML = '';
+            let completedCount = 0;
+
+            stages.forEach((stage, index) => {
+                const stageData = timeline[stage.key];
+                const statusClass = `status-${stageData.status}`;
+                const statusLabel = {
+                    'completed': '✓ Selesai',
+                    'ongoing': '⟳ Sedang Berlangsung',
+                    'pending': '⧖ Menunggu'
+                }[stageData.status] || stageData.status;
+
+                if (stageData.status === 'completed') completedCount++;
+
+                timelineHTML += `
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h3>${stage.emoji} ${stage.label}</h3>
+                            <p>${stage.description}</p>
+                            <span class="timeline-status ${statusClass}">${statusLabel}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('timeline').innerHTML = timelineHTML;
+
+            // Update progress
+            const progress = Math.round((completedCount / stages.length) * 100);
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = progress + '%';
+        }
+
+        // Load booking switcher (for multiple bookings)
+        function loadBookingSwitcher(bookings) {
+            if (bookings.length <= 1) return;
+
+            const switcherHTML = `
+                <div style="margin-bottom: 2rem; padding: 1rem; background: var(--bg-light); border-radius: 8px;">
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Anda memiliki ${bookings.length} booking</p>
+                    <select onchange="if(this.value) { const booking = ${JSON.stringify(bookings)}[this.value]; loadBookingTimeline(booking); }" style="width: 100%; padding: 0.5rem; border: 1px solid var(--secondary); border-radius: 4px;">
+                        ${bookings.map((b, i) => `<option value="${i}">${b.names} & ${b.partner} - ${formatDateOnly(b.date)}</option>`).join('')}
+                    </select>
+                </div>
+            `;
+
+            // Insert before timeline
+            document.getElementById('timeline').insertAdjacentHTML('beforebegin', switcherHTML);
+        }
+
+        // Handle logout
+        function handleLogout(e) {
+            e.preventDefault();
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                lokaAuth.logout();
+                updateNavbarUser();
+                showAlert('Logout berhasil!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>

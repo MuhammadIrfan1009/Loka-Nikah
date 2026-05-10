@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Paket - LOKA NIKAH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                LOKA NIKAH
+                <div class="logo-subtitle">Wedding Planner</div>
+            </a>
+            <nav>
+                <a href="index.html">Beranda</a>
+                <a href="paket.html">Layanan</a>
+                <div id="authLinks" style="display: flex; gap: 1rem;">
+                    <a href="register.html">Daftar</a>
+                    <a href="login.html">Masuk</a>
+                </div>
+                <div id="userMenu" style="display: none; gap: 1rem;">
+                    <a href="booking.html">Booking</a>
+                    <a href="tracking.html">Tracking</a>
+                    <span id="userNameDisplay"></span>
+                    <a href="#" onclick="handleLogout(event)">Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <a href="paket.html" class="btn btn-secondary btn-small" style="margin-bottom: 2rem;">← Kembali ke Layanan</a>
+
+            <div id="detail-content">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+
+            <!-- Related Vendors -->
+            <div id="relatedVendors" style="margin-top: 4rem;"></div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Tentang Loka Nikah</h4>
+                <p style="font-size: 0.9rem; line-height: 1.6;">
+                    Kami adalah solusi modern untuk merencanakan pernikahan impian Anda dengan mudah, transparan, dan elegan.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Layanan</h4>
+                <ul>
+                    <li><a href="paket.html">Katalog Layanan</a></li>
+                    <li><a href="booking.html">Booking Online</a></li>
+                    <li><a href="tracking.html">Tracking Progres</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Kontak</h4>
+                <ul>
+                    <li>
+                        <i class="fa-solid fa-phone"></i>
+                        (021) 1234-NIKAH
+                    </li>
+
+                    <li>
+                        <i class="fa-brands fa-whatsapp"></i>
+                        +62 812-XXXX-XXXX
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-envelope"></i>
+                        hello@lokanikah.com
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Follow Kami</h4>
+
+                <ul>
+                    <li>
+                        <a href="#">
+                            <i class="fa-brands fa-instagram"></i>
+                            Instagram
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-brands fa-tiktok"></i>
+                            TikTok
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-brands fa-facebook"></i>
+                            Facebook
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <p><strong>Loka Nikah © 2026</strong></p>
+
+        <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.9;">
+            Merapikan mimpi, mewujudkan janji.
+        </p>
+    </footer>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        // Get vendor from URL parameter
+        function getVendorFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('vendor');
+        }
+
+        // Load vendor detail on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const vendorId = getVendorFromURL();
+            if (vendorId) {
+                loadVendorDetail(vendorId);
+                loadRelatedVendors(vendorId);
+            } else {
+                window.location.href = 'paket.html';
+            }
+        });
+
+        // Load related vendors
+        function loadRelatedVendors(currentVendorId) {
+            const allVendors = getAllVendors();
+            const related = allVendors.filter(v => v.id !== currentVendorId).slice(0, 3);
+
+            if (related.length === 0) return;
+
+            const container = document.getElementById('relatedVendors');
+            let html = `
+                <h2 style="font-size: 2rem; color: var(--primary); margin-bottom: 2rem;">Layanan Terkait</h2>
+                <div class="grid grid-3">
+            `;
+
+            related.forEach(vendor => {
+                html += `
+                    <a href="detail-paket.html?vendor=${vendor.id}" class="vendor-card">
+                        <div class="vendor-image">${vendor.emoji}</div>
+                        <div class="vendor-info">
+                            <h3>${vendor.title}</h3>
+                            <p>${vendor.description.substring(0, 80)}...</p>
+                            <span class="vendor-badge">${vendor.category}</span>
+                        </div>
+                    </a>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Handle logout
+        function handleLogout(e) {
+            e.preventDefault();
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                lokaAuth.logout();
+                updateNavbarUser();
+                showAlert('Logout berhasil!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>

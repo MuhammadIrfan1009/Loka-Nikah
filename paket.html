@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Pernikahan - LOKA NIKAH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                LOKA NIKAH
+                <div class="logo-subtitle">Wedding Planner</div>
+            </a>
+            <nav>
+                <a href="index.html">Beranda</a>
+                <a href="paket.html" class="active">Layanan</a>
+                <div id="authLinks" style="display: flex; gap: 1rem;">
+                    <a href="register.html">Daftar</a>
+                    <a href="login.html">Masuk</a>
+                </div>
+                <div id="userMenu" style="display: none; gap: 1rem;">
+                    <a href="booking.html">Booking</a>
+                    <a href="tracking.html">Tracking</a>
+                    <span id="userNameDisplay"></span>
+                    <a href="#" onclick="handleLogout(event)">Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">Katalog Pernikahan</h1>
+            <p class="text-muted" style="margin-bottom: 2rem; font-size: 1.1rem;">Pilih dari vendor terbaik untuk melengkapi jalannya acara pernikahan impianmu.</p>
+
+            <div class="grid grid-2">
+                <!-- Catering -->
+                <a href="detail-paket.html?vendor=catering" class="vendor-card" data-animate>
+                    <div class="vendor-image">🍽️</div>
+                    <div class="vendor-info">
+                        <h3>Catering Eksklusif</h3>
+                        <p>Layanan catering premium dengan menu yang dapat disesuaikan sesuai selera dan budget kamu.</p>
+                        <span class="vendor-badge">Customizable</span>
+                    </div>
+                </a>
+
+                <!-- Makeup -->
+                <a href="detail-paket.html?vendor=makeup" class="vendor-card" data-animate>
+                    <div class="vendor-image">✨</div>
+                    <div class="vendor-info">
+                        <h3>MUA by Loka Team</h3>
+                        <p>Makeup artist profesional dengan spesialisasi soft glam look yang timeless dan elegant.</p>
+                        <span class="vendor-badge">Soft Glam</span>
+                    </div>
+                </a>
+
+                <!-- Photography -->
+                <a href="detail-paket.html?vendor=fotografi" class="vendor-card" data-animate>
+                    <div class="vendor-image">📸</div>
+                    <div class="vendor-info">
+                        <h3>Fotografer Premium</h3>
+                        <p>Dokumentasi profesional dengan editing berkualitas tinggi untuk mengabadikan momen berhargamu.</p>
+                        <span class="vendor-badge">High-Quality</span>
+                    </div>
+                </a>
+
+                <!-- Decoration -->
+                <a href="detail-paket.html?vendor=dekorasi" class="vendor-card" data-animate>
+                    <div class="vendor-image">🎀</div>
+                    <div class="vendor-info">
+                        <h3>Dekorasi Minimalis</h3>
+                        <p>Desain dekorasi modern dengan konsep minimalis yang mencerminkan elegance dan kesederhanaan.</p>
+                        <span class="vendor-badge">Minimalist</span>
+                    </div>
+                </a>
+
+                <!-- Entertainment -->
+                <a href="detail-paket.html?vendor=entertainment" class="vendor-card" data-animate>
+                    <div class="vendor-image">🎵</div>
+                    <div class="vendor-info">
+                        <h3>Entertainment & MC</h3>
+                        <p>Hiburan berkelas dengan MC profesional yang membuat acara mu menjadi lebih meriah dan berkesan.</p>
+                        <span class="vendor-badge">Professional</span>
+                    </div>
+                </a>
+
+                <!-- Invitations -->
+                <a href="detail-paket.html?vendor=undangan" class="vendor-card" data-animate>
+                    <div class="vendor-image">💌</div>
+                    <div class="vendor-info">
+                        <h3>Undangan Desain</h3>
+                        <p>Desain undangan custom dengan konsep modern yang mencerminkan kepribadian dan gaya nikah kamu.</p>
+                        <span class="vendor-badge">Custom Design</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Info Section -->
+            <div style="background: var(--secondary); padding: 2rem; border-radius: 12px; margin-top: 3rem;">
+                <h2 style="color: var(--primary); font-size: 1.5rem; font-family: 'Cormorant Garamond', serif; margin-bottom: 1rem;">Paket Bundle Hemat</h2>
+                <p style="color: var(--dark); margin-bottom: 1.5rem;">Kami juga menyediakan paket bundle yang menggabungkan beberapa layanan dengan harga spesial. Hubungi tim kami untuk informasi lebih lanjut tentang paket custom sesuai kebutuhan Anda.</p>
+                <a href="booking.html" class="btn btn-primary">Lihat Harga Paket Bundle</a>
+            </div>
+
+            <!-- FAQ Section -->
+            <div style="margin-top: 3rem;">
+                <h2 style="color: var(--primary); font-size: 1.5rem; font-family: 'Cormorant Garamond', serif; margin-bottom: 2rem; text-align: center;">Pertanyaan Umum</h2>
+                
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <details style="margin-bottom: 1rem; background: var(--light); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <summary style="cursor: pointer; color: var(--primary); font-weight: 600;">Bagaimana cara booking vendor?</summary>
+                        <p style="color: var(--dark); margin-top: 1rem;">Anda dapat booking vendor melalui halaman Booking. Pilih vendor yang Anda inginkan, isi formulir booking dengan data pernikahan Anda, dan tim kami akan menghubungi Anda untuk konfirmasi.</p>
+                    </details>
+
+                    <details style="margin-bottom: 1rem; background: var(--light); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <summary style="cursor: pointer; color: var(--primary); font-weight: 600;">Apakah ada biaya tersembunyi?</summary>
+                        <p style="color: var(--dark); margin-top: 1rem;">Tidak ada biaya tersembunyi. Semua harga yang tertera sudah termasuk semua komponen layanan. Kami percaya pada transparansi penuh dalam setiap transaksi.</p>
+                    </details>
+
+                    <details style="margin-bottom: 1rem; background: var(--light); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <summary style="cursor: pointer; color: var(--primary); font-weight: 600;">Kapan waktu terbaik untuk booking?</summary>
+                        <p style="color: var(--dark); margin-top: 1rem;">Disarankan untuk booking 3-6 bulan sebelum hari pernikahan untuk mendapatkan vendor pilihan Anda. Namun kami juga siap membantu booking dengan waktu yang lebih singkat jika tersedia.</p>
+                    </details>
+
+                    <details style="margin-bottom: 1rem; background: var(--light); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <summary style="cursor: pointer; color: var(--primary); font-weight: 600;">Bagaimana jika ada perubahan pada hari H?</summary>
+                        <p style="color: var(--dark); margin-top: 1rem;">Kami memahami bahwa perubahan bisa terjadi. Tim kami siap membantu Anda dengan solusi yang fleksibel dan profesional. Hubungi customer service kami segera jika ada perubahan.</p>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </main>
+
+   <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Tentang Loka Nikah</h4>
+                <p style="font-size: 0.9rem; line-height: 1.6;">
+                    Kami adalah solusi modern untuk merencanakan pernikahan impian Anda dengan mudah, transparan, dan elegan.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Layanan</h4>
+                <ul>
+                    <li><a href="paket.html">Katalog Layanan</a></li>
+                    <li><a href="booking.html">Booking Online</a></li>
+                    <li><a href="tracking.html">Tracking Progres</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Kontak</h4>
+                <ul>
+                    <li>
+                        <i class="fa-solid fa-phone"></i>
+                        (021) 1234-NIKAH
+                    </li>
+
+                    <li>
+                        <i class="fa-brands fa-whatsapp"></i>
+                        +62 812-XXXX-XXXX
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-envelope"></i>
+                        hello@lokanikah.com
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Follow Kami</h4>
+
+                <ul>
+                    <li>
+                        <a href="#">
+                            <i class="fa-brands fa-instagram"></i>
+                            Instagram
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-brands fa-tiktok"></i>
+                            TikTok
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa-brands fa-facebook"></i>
+                            Facebook
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <p><strong>Loka Nikah © 2026</strong></p>
+
+        <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.9;">
+            Merapikan mimpi, mewujudkan janji.
+        </p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    
+    <script>
+        function handleLogout(e) {
+            e.preventDefault();
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                lokaAuth.logout();
+                updateNavbarUser();
+                showAlert('Logout berhasil!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>
