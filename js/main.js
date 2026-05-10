@@ -15,6 +15,37 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+// ==================== HAMBURGER MENU ==================== //
+
+(function initHamburger() {
+    const toggle = document.getElementById('navToggle');
+    const nav    = document.querySelector('header nav');
+    if (!toggle || !nav) return;
+
+    function openMenu()  { nav.classList.add('open');    toggle.classList.add('open');    toggle.setAttribute('aria-expanded', 'true');  }
+    function closeMenu() { nav.classList.remove('open'); toggle.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); }
+    function isOpen()    { return nav.classList.contains('open'); }
+
+    toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isOpen() ? closeMenu() : openMenu();
+    });
+
+    nav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('click', (e) => {
+        if (isOpen() && !nav.contains(e.target) && e.target !== toggle) {
+            closeMenu();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isOpen()) closeMenu();
+    });
+})();
+
 // ==================== ACTIVE NAV ==================== //
 
 function updateActiveNav() {
