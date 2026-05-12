@@ -3,21 +3,378 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>LOKA NIKAH - Solusi Modern untuk Hari Sakral Anda</title>
-
-    <!-- Logo / Favicon -->
-    <link rel="icon" type="image/png" href="assets//icons/situs.png">
-    <link rel="apple-touch-icon" href="assets//icons/situs.png">
-
-    <!-- Fonts -->
+    <title>LOKA NIKAH - Detail Paket</title>
+    <link rel="icon" type="image/png" href="assets/icons/situs.png">
+    <link rel="apple-touch-icon" href="assets/icons/situs.png">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
-
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+        /* ── PRICE BREAKDOWN PANEL ── */
+        .detail-hero {
+            display: flex;
+            align-items: flex-start;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        /* gambar */
+        .detail-hero-image {
+            flex: 0 0 380px;
+            width: 380px;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 24px;
+            background: #f5f5f5;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        .detail-hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* teks */
+        .detail-content {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        /* responsive HP */
+        @media (max-width: 768px) {
+            .detail-hero {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .detail-hero-image {
+                width: 100%;
+                height: 250px;
+                flex: unset;
+            }
+
+            .detail-content {
+                width: 100%;
+            }
+        }
+        .price-panel {
+            background: var(--light);
+            border: 1px solid rgba(140, 94, 88, 0.15);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 2.5rem;
+            box-shadow: 0 2px 24px rgba(140,94,88,0.07);
+        }
+        .price-panel-header {
+            background: linear-gradient(135deg, #8C5E58 0%, #a87060 100%);
+            color: #fff;
+            padding: 1.25rem 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .price-panel-header h3 {
+            margin: 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        .price-panel-header .pp-icon {
+            width: 34px; height: 34px;
+            background: rgba(255,255,255,0.18);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .price-rows {
+            padding: 0 1.75rem;
+        }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.95rem 0;
+            border-bottom: 1px solid rgba(217,202,179,0.3);
+            font-size: 0.93rem;
+            gap: 1rem;
+        }
+        .price-row:last-child { border-bottom: none; }
+        .price-row-label {
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex: 1;
+        }
+        .price-row-label .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+        .price-row-desc {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 0.15rem;
+        }
+        .price-row-amount {
+            font-weight: 600;
+            color: var(--dark);
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+        .price-row-amount.included {
+            color: #5a9e6f;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background: #edf7f1;
+            padding: 2px 8px;
+            border-radius: 99px;
+        }
+        .price-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.1rem 1.75rem;
+            background: rgba(140,94,88,0.06);
+            border-top: 2px solid rgba(140,94,88,0.18);
+            margin-top: 0;
+        }
+        .price-total-label {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .price-total-amount {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .price-note {
+            padding: 0.8rem 1.75rem 1.25rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* ── PAYMENT PLAN STRIP ── */
+        .payment-strip {
+            margin-top: 1.5rem;
+            border: 1px solid rgba(140, 94, 88, 0.15);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .payment-strip-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.9rem 1.4rem;
+            background: rgba(217,202,179,0.25);
+            cursor: pointer;
+            user-select: none;
+            gap: 1rem;
+        }
+        .payment-strip-head-left {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+        .payment-strip-head-left .ps-icon {
+            width: 30px; height: 30px;
+            border-radius: 7px;
+            background: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .payment-strip-head h4 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        .payment-strip-head .ps-badge {
+            font-size: 0.73rem;
+            background: var(--primary);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .payment-strip-toggle {
+            color: var(--primary);
+            transition: transform 0.3s ease;
+            font-size: 0.85rem;
+        }
+        .payment-strip-toggle.open { transform: rotate(180deg); }
+
+        .payment-strip-body {
+            display: none;
+            padding: 1rem 1.4rem 1.25rem;
+            background: var(--light);
+        }
+        .payment-strip-body.open { display: block; }
+
+        .payment-phases {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .payment-phase {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+        }
+        .phase-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 36px;
+            flex-shrink: 0;
+        }
+        .phase-node {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+        .phase-line {
+            width: 2px;
+            flex: 1;
+            background: linear-gradient(to bottom, var(--primary) 0%, rgba(140,94,88,0.15) 100%);
+            margin: 4px auto 4px;
+        }
+        .payment-phase:last-child .phase-line { display: none; }
+        .phase-content {
+            padding: 0 0 1.1rem 0.9rem;
+            flex: 1;
+        }
+        .phase-title {
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--dark);
+        }
+        .phase-when {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin: 0.15rem 0 0.35rem;
+        }
+        .phase-amount {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .phase-pct {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(140,94,88,0.1);
+            padding: 1px 7px;
+            border-radius: 99px;
+            margin-left: 0.4rem;
+            vertical-align: middle;
+        }
+        .phase-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            line-height: 1.5;
+        }
+
+        .payment-guarantee {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.85rem;
+            padding: 0.65rem 0.9rem;
+            background: #edf7f1;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #3d7a55;
+            font-weight: 600;
+        }
+
+        /* ── SPEC TABLE CLEAN ── */
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .spec-table tr {
+            border-bottom: 1px solid rgba(217,202,179,0.25);
+        }
+        .spec-table tr:last-child { border-bottom: none; }
+        .spec-table td {
+            padding: 0.7rem 0.4rem;
+            vertical-align: top;
+        }
+        .spec-table td:first-child {
+            color: var(--text-muted);
+            font-weight: 500;
+            width: 45%;
+        }
+        .spec-table td:last-child {
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        /* ── STICKY CTA ── */
+        .sticky-cta {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(217,202,179,0.4);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            z-index: 999;
+            box-shadow: 0 -4px 24px rgba(0,0,0,0.06);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.23,1,0.32,1);
+        }
+        .sticky-cta.visible { transform: translateY(0); }
+        .sticky-cta-price {
+            display: flex;
+            flex-direction: column;
+        }
+        .sticky-cta-price .scp-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .sticky-cta-price .scp-amount {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+        body { padding-bottom: 90px; }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -25,23 +382,14 @@
         <div class="header-container">
             <div class="logo-wrapper">
                 <img src="assets/icons/logo.png" alt="LOKA NIKAH Logo" class="logo-img">
-
                 <div class="logo">
                     LOKA NIKAH
                     <div class="logo-subtitle">Wedding Planner</div>
                 </div>
             </div>
-            <button 
-                class="nav-toggle" 
-                id="navToggle"
-                aria-label="Toggle navigation"
-                aria-expanded="false">
-                
-                <span></span>
-                <span></span>
-                <span></span>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span><span></span><span></span>
             </button>
-        
             <nav>
                 <a href="index.html" class="active">Beranda</a>
                 <a href="paket.html">Layanan</a>
@@ -61,28 +409,29 @@
 
     <main>
         <div class="container">
-
             <div id="detail-content">
-                <div class="loading">
-                    <div class="spinner"></div>
-                </div>
+                <div class="loading"><div class="spinner"></div></div>
             </div>
-
-            <!-- Related Vendors -->
             <div id="relatedVendors" style="margin-top: 4rem;"></div>
         </div>
     </main>
+
+    <!-- Sticky CTA bar -->
+    <div class="sticky-cta" id="stickyCta">
+        <div class="sticky-cta-price">
+            <span class="scp-label">Estimasi mulai dari</span>
+            <span class="scp-amount" id="stickyPrice">—</span>
+        </div>
+        <a href="#" id="stickyBookBtn" class="btn btn-primary" style="white-space:nowrap;">Pesan Sekarang</a>
+    </div>
 
     <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-section">
                 <h4>Tentang Loka Nikah</h4>
-                <p style="font-size: 0.9rem; line-height: 1.6;">
-                    Kami adalah solusi modern untuk merencanakan pernikahan impian Anda dengan mudah, transparan, dan elegan.
-                </p>
+                <p style="font-size: 0.9rem; line-height: 1.6;">Kami adalah solusi modern untuk merencanakan pernikahan impian Anda dengan mudah, transparan, dan elegan.</p>
             </div>
-
             <div class="footer-section">
                 <h4>Layanan</h4>
                 <ul>
@@ -91,74 +440,349 @@
                     <li><a href="tracking.html">Tracking Progres</a></li>
                 </ul>
             </div>
-
             <div class="footer-section">
                 <h4>Kontak</h4>
                 <ul>
-                    <li>
-                        <i class="fa-solid fa-phone"></i>
-                        (021) 1234-5678
-                    </li>
-
-                    <li>
-                        <i class="fa-brands fa-whatsapp"></i>
-                        +62 812-3456-7890
-                    </li>
-
-                    <li>
-                        <i class="fa-solid fa-envelope"></i>
-                        lokanikah@gmail.com
-                    </li>
+                    <li><i class="fa-solid fa-phone"></i> (021) 1234-5678</li>
+                    <li><i class="fa-brands fa-whatsapp"></i> +62 812-3456-7890</li>
+                    <li><i class="fa-solid fa-envelope"></i> lokanikah@gmail.com</li>
                 </ul>
             </div>
-
             <div class="footer-section">
                 <h4>Follow Kami</h4>
-
                 <ul>
-                    <li>
-                        <a href="#">
-                            <i class="fa-brands fa-instagram"></i>
-                            Instagram
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            <i class="fa-brands fa-tiktok"></i>
-                            TikTok
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            <i class="fa-brands fa-facebook"></i>
-                            Facebook
-                        </a>
-                    </li>
+                    <li><a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fa-brands fa-tiktok"></i> TikTok</a></li>
+                    <li><a href="#"><i class="fa-brands fa-facebook"></i> Facebook</a></li>
                 </ul>
             </div>
         </div>
-
         <div class="footer-divider"></div>
-
         <p><strong>Loka Nikah © 2026</strong></p>
-
-        <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.9;">
-            Merapikan mimpi, mewujudkan janji.
-        </p>
+        <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.9;">Merapikan mimpi, mewujudkan janji.</p>
     </footer>
+
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
-
     <script>
-        // Get vendor from URL parameter
-        function getVendorFromURL() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('vendor');
+        /* ── Harga transparan per vendor ── */
+        const vendorPricing = {
+            catering: {
+                base: 250000,
+                unit: '/pax',
+                baseLabel: 'Harga dasar per pax (min. 100 pax)',
+                rows: [
+                    { label: 'Menu Makanan & Minuman', desc: 'Nasi, lauk, dessert, minuman', amount: 'Rp 200.000/pax' },
+                    { label: 'Presentasi & Prasmanan', desc: 'Setup meja, dekorasi makanan', amount: 'Rp 25.000/pax' },
+                    { label: 'Staff Pelayanan', desc: '1 staff per 30 tamu', amount: 'Rp 15.000/pax' },
+                    { label: 'Peralatan Makan', desc: 'Piring, gelas, sendok premium', amount: 'Rp 10.000/pax' },
+                    { label: 'Packaging & Cleaners', desc: 'Bersih-bersih pasca acara', amount: 'Included', included: true }
+                ],
+                totalFrom: 'Rp 250.000/pax',
+                totalNote: 'Estimasi 100 pax ≈ Rp 25.000.000',
+                phases: [
+                    { title: 'Uang Muka (DP)', when: 'Saat booking dikonfirmasi', pct: 30, desc: 'Mengamankan tanggal dan vendor Anda.' },
+                    { title: 'Pelunasan 1', when: 'H-30 sebelum acara', pct: 40, desc: 'Setelah fitting & konsultasi menu selesai.' },
+                    { title: 'Pelunasan Akhir', when: 'H-7 sebelum acara', pct: 30, desc: 'Final konfirmasi jumlah tamu dan menu.' }
+                ]
+            },
+            makeup: {
+                base: 500000,
+                unit: '/orang',
+                baseLabel: 'Per sesi makeup (pengantin utama)',
+                rows: [
+                    { label: 'Makeup Pengantin', desc: 'Soft Glam full face, lasting 12 jam', amount: 'Rp 350.000/orang' },
+                    { label: 'Styling Rambut', desc: 'Sanggul, curling, atau updo', amount: 'Rp 100.000/orang' },
+                    { label: 'Produk Premium', desc: 'MAC, NARS, Charlotte Tilbury', amount: 'Rp 50.000/orang' },
+                    { label: 'Touch-up Kit', desc: 'Kit sentuhan ulang sepanjang acara', amount: 'Included', included: true },
+                    { label: 'Makeup Trial (1x)', desc: 'Sebelum hari-H, full look', amount: 'Included', included: true }
+                ],
+                totalFrom: 'Rp 500.000/orang',
+                totalNote: 'Paket pengantin berdua mulai Rp 1.000.000',
+                phases: [
+                    { title: 'Uang Muka (DP)', when: 'Saat booking dikonfirmasi', pct: 50, desc: 'Mengamankan slot MUA untuk tanggal Anda.' },
+                    { title: 'Pelunasan', when: 'H-7 sebelum acara', pct: 50, desc: 'Setelah sesi trial selesai dilakukan.' }
+                ]
+            },
+            fotografi: {
+                base: 8000000,
+                unit: '',
+                baseLabel: 'Paket dasar dokumentasi (8 jam)',
+                rows: [
+                    { label: '2 Fotografer Profesional', desc: 'Coverage dari kedua sudut', amount: 'Rp 5.000.000' },
+                    { label: 'Editing 500+ Foto', desc: 'Color grading & retouching premium', amount: 'Rp 1.500.000' },
+                    { label: 'Album Hardcover', desc: '30×30cm, 40 halaman', amount: 'Rp 1.000.000' },
+                    { label: 'Galeri Online', desc: 'Link pribadi untuk tamu', amount: 'Included', included: true },
+                    { label: 'File Hi-Res', desc: 'Flash drive + cloud storage', amount: 'Included', included: true }
+                ],
+                totalFrom: 'Rp 8.000.000',
+                totalNote: '+ Rp 2.000.000 untuk tambah videografer',
+                phases: [
+                    { title: 'Uang Muka (DP)', when: 'Saat booking dikonfirmasi', pct: 40, desc: 'Blok tanggal & tim fotografer.' },
+                    { title: 'Pelunasan 1', when: 'H-14 sebelum acara', pct: 30, desc: 'Setelah sesi pre-wedding (jika ada).' },
+                    { title: 'Pelunasan Akhir', when: 'H-3 sebelum acara', pct: 30, desc: 'Final brief dan rundown acara.' }
+                ]
+            },
+            dekorasi: {
+                base: 3000000,
+                unit: '',
+                baseLabel: 'Paket dekorasi minimalis dasar',
+                rows: [
+                    { label: 'Backdrop & Arch', desc: 'Custom ukuran sesuai venue', amount: 'Rp 1.200.000' },
+                    { label: 'Floral Arrangement', desc: 'Bunga segar atau artificial', amount: 'Rp 800.000' },
+                    { label: 'Meja & Kursi Dressing', desc: 'Runner, centerpiece, chair sash', amount: 'Rp 600.000' },
+                    { label: 'Lighting Tambahan', desc: 'Fairy lights, spotlights', amount: 'Rp 400.000' },
+                    { label: 'Setup & Breakdown', desc: '2-3 jam sebelum & setelah acara', amount: 'Included', included: true }
+                ],
+                totalFrom: 'Rp 3.000.000',
+                totalNote: 'Disesuaikan luas venue & konsep',
+                phases: [
+                    { title: 'Uang Muka (DP)', when: 'Saat booking dikonfirmasi', pct: 35, desc: 'Booking slot tim dekorasi.' },
+                    { title: 'Pelunasan 1', when: 'H-21 sebelum acara', pct: 35, desc: 'Setelah approval desain final.' },
+                    { title: 'Pelunasan Akhir', when: 'H-3 sebelum acara', pct: 30, desc: 'Konfirmasi material & ukuran.' }
+                ]
+            },
+            entertainment: {
+                base: 2000000,
+                unit: '',
+                baseLabel: 'Paket MC + Sound System (4 jam)',
+                rows: [
+                    { label: 'MC Profesional', desc: '1 MC bilingual (Ind/Eng)', amount: 'Rp 1.000.000' },
+                    { label: 'Sound System', desc: 'Wireless mic, speaker, mixer', amount: 'Rp 600.000' },
+                    { label: 'Playlist Curated', desc: 'Background & sesi hiburan', amount: 'Rp 200.000' },
+                    { label: 'Koordinasi Rundown', desc: 'Briefing H-7 dengan couple', amount: 'Rp 200.000' },
+                    { label: 'Overtime 1 jam pertama', desc: 'Jika acara melebihi durasi', amount: 'Rp 500.000/jam' }
+                ],
+                totalFrom: 'Rp 2.000.000',
+                totalNote: '+ Live Band ab Rp 5.000.000 / DJ ab Rp 3.000.000',
+                phases: [
+                    { title: 'Uang Muka (DP)', when: 'Saat booking dikonfirmasi', pct: 50, desc: 'Blok jadwal MC & tim.' },
+                    { title: 'Pelunasan', when: 'H-7 sebelum acara', pct: 50, desc: 'Setelah briefing rundown final.' }
+                ]
+            },
+            undangan: {
+                base: 1500000,
+                unit: '',
+                baseLabel: 'Paket desain undangan custom',
+                rows: [
+                    { label: 'Desain Custom', desc: 'Konsep & layout dari nol', amount: 'Rp 500.000' },
+                    { label: 'Revisi Unlimited', desc: 'Sampai Anda puas', amount: 'Included', included: true },
+                    { label: 'File Siap Cetak (PDF)', desc: 'Resolusi tinggi, CMYK', amount: 'Rp 300.000' },
+                    { label: 'Versi Digital (Web)', desc: 'Link undangan online interaktif', amount: 'Rp 400.000' },
+                    { label: 'Cetak Fisik 100 lembar', desc: 'Kertas premium 300gsm', amount: 'Rp 300.000' }
+                ],
+                totalFrom: 'Rp 1.500.000',
+                totalNote: 'Cetak tambahan Rp 2.500/lembar',
+                phases: [
+                    { title: 'Uang Muka (DP)', when: 'Saat order dikonfirmasi', pct: 50, desc: 'Mulai proses desain.' },
+                    { title: 'Pelunasan', when: 'Setelah approval desain final', pct: 50, desc: 'Sebelum masuk produksi cetak.' }
+                ]
+            }
+        };
+
+        function formatRp(num) {
+            return 'Rp ' + num.toLocaleString('id-ID');
         }
 
-        // Load vendor detail on page load
+        function calcPhaseAmount(total, pct) {
+            return formatRp(Math.round(total * pct / 100));
+        }
+
+        function getEstBase(vendorId) {
+            const p = vendorPricing[vendorId];
+            if (!p) return null;
+            return p.base;
+        }
+
+        /* ── Build pricing section HTML ── */
+        function buildPricingSection(vendorId) {
+            const p = vendorPricing[vendorId];
+            if (!p) return '';
+
+            const baseNum = p.base;
+            const baseFmt = formatRp(baseNum);
+
+            const rowsHTML = p.rows.map(r => `
+                <div class="price-row">
+                    <div class="price-row-label">
+                        <span class="dot"></span>
+                        <div>
+                            <div>${r.label}</div>
+                            ${r.desc ? `<div class="price-row-desc">${r.desc}</div>` : ''}
+                        </div>
+                    </div>
+                    <span class="price-row-amount${r.included ? ' included' : ''}">${r.amount}</span>
+                </div>
+            `).join('');
+
+            const phasesHTML = p.phases.map((ph, i) => {
+                const phAmt = calcPhaseAmount(baseNum, ph.pct);
+                return `
+                    <div class="payment-phase">
+                        <div class="phase-connector">
+                            <div class="phase-node">${i + 1}</div>
+                            <div class="phase-line"></div>
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-title">${ph.title} <span class="phase-pct">${ph.pct}%</span></div>
+                            <div class="phase-when">${ph.when}</div>
+                            <div class="phase-amount">${phAmt}</div>
+                            <div class="phase-desc">${ph.desc}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <!-- Transparent Price Breakdown -->
+                <div class="price-panel" data-animate>
+                    <div class="price-panel-header">
+                        <div class="pp-icon"><i class="bi bi-cash-stack"></i></div>
+                        <h3>Rincian Biaya Transparan</h3>
+                    </div>
+                    <div class="price-rows">
+                        ${rowsHTML}
+                    </div>
+                    <div class="price-total-row">
+                        <span class="price-total-label">Estimasi Total Mulai Dari</span>
+                        <span class="price-total-amount">${p.totalFrom}</span>
+                    </div>
+                    <div class="price-note">
+                        <i class="fa-solid fa-circle-info" style="color:var(--primary);"></i>
+                        ${p.totalNote} · Harga final dikonfirmasi saat konsultasi
+                    </div>
+                </div>
+
+                <!-- Payment Plan Strip -->
+                <div class="payment-strip" data-animate>
+                    <div class="payment-strip-head" id="paymentStripHead" onclick="togglePaymentStrip()">
+                        <div class="payment-strip-head-left">
+                            <div class="ps-icon"><i class="bi bi-credit-card-2-front"></i></div>
+                            <h4>Skema Pembayaran Bertahap</h4>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:0.75rem;">
+                            <span class="ps-badge">${p.phases.length}× cicilan</span>
+                            <i class="bi bi-chevron-down payment-strip-toggle" id="stripToggleIcon"></i>
+                        </div>
+                    </div>
+                    <div class="payment-strip-body" id="paymentStripBody">
+                        <div class="payment-phases">
+                            ${phasesHTML}
+                        </div>
+                        <div class="payment-guarantee">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            Pembayaran aman · Refund policy berlaku sesuai S&K
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function togglePaymentStrip() {
+            const body = document.getElementById('paymentStripBody');
+            const icon = document.getElementById('stripToggleIcon');
+            body.classList.toggle('open');
+            icon.classList.toggle('open');
+        }
+
+        /* ── Override loadVendorDetail to inject pricing ── */
+        function loadVendorDetail(vendorId) {
+            const vendor = vendorDatabase[vendorId];
+            if (!vendor) return;
+
+            const container = document.getElementById('detail-content');
+            if (!container) return;
+
+            const featuresHTML = vendor.features
+                .map((f, i) => `
+                    <li style="
+                        display:flex; align-items:flex-start; gap:0.75rem;
+                        padding:0.65rem 0;
+                        border-bottom: 1px solid rgba(217,202,179,0.25);
+                        animation: slideUp 0.5s ${i * 0.08}s cubic-bezier(0.23,1,0.32,1) both;
+                    ">
+                        <span style="
+                            color:var(--primary); font-weight:700; flex-shrink:0;
+                            width:18px; height:18px; border:1.5px solid var(--primary);
+                            border-radius:50%; display:flex; align-items:center;
+                            justify-content:center; font-size:0.6rem; margin-top:2px;
+                        "><i class="bi bi-check" style="font-size:0.5rem;"></i></span>
+                        <span style="color:var(--dark); font-size:0.95rem;">${f}</span>
+                    </li>
+                `).join('');
+
+            const specsHTML = Object.entries(vendor.specs)
+                .map(([key, value]) => `
+                    <tr>
+                        <td>${key}</td>
+                        <td>${value}</td>
+                    </tr>
+                `).join('');
+
+            const pricingHTML = buildPricingSection(vendorId);
+
+            container.innerHTML = `
+                <a href="paket.html" class="btn btn-secondary btn-small" style="margin-bottom:2rem;">← Kembali ke Layanan</a>
+
+                <div class="detail-hero slide-up">
+                    <div class="detail-hero-image">
+                        ${vendor.image ? `<img src="${vendor.image}" alt="${vendor.title}" loading="lazy">` : `<div class="detail-hero-fallback"><i class="bi bi-image"></i></div>`}
+                        <span class="detail-hero-tag">${vendor.category}</span>
+                    </div>
+                    <div class="detail-content">
+                        <div class="detail-info">
+                            <span class="text-label" style="color:var(--text-muted); display:block; margin-bottom:0.4rem;">${vendor.category}</span>
+                            <h2>${vendor.title}</h2>
+                            <p style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--primary); font-weight:600; margin-top:0.5rem;">${vendor.price}</p>
+                            <p style="margin-top:1.25rem; color:var(--dark); line-height:1.75;">${vendor.fullDescription}</p>
+                        </div>
+                        <div class="detail-specs">
+                            <h3 style="color:var(--primary); margin-bottom:1.25rem; font-family:'Cormorant Garamond',serif; font-size:1.4rem;">Spesifikasi Layanan</h3>
+                            <table class="spec-table">
+                                ${specsHTML}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:2rem;">
+                    <h3 style="color:var(--dark); margin-bottom:0.25rem; font-size:1.4rem;">Fitur Unggulan</h3>
+                    <p style="color:var(--text-muted); font-size:var(--fs-sm); margin-bottom:1.25rem; letter-spacing:0.02em;">Yang membuat layanan ini berbeda</p>
+                    <ul style="list-style:none;">
+                        ${featuresHTML}
+                    </ul>
+                </div>
+
+                ${pricingHTML}
+
+                <div style="text-align:center; margin-top:2.5rem; padding-top:2rem; border-top:1px solid rgba(217,202,179,0.3);">
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">Harga akan dikonfirmasi final setelah sesi konsultasi gratis</p>
+                    <a href="booking.html?paket=${vendorId}" class="btn btn-primary" style="font-size:1rem; padding:0.9rem 2.5rem;">Pesan Layanan Ini</a>
+                </div>
+            `;
+
+            /* Sticky CTA */
+            const base = getEstBase(vendorId);
+            if (base) {
+                document.getElementById('stickyPrice').textContent = vendorPricing[vendorId].totalFrom;
+            }
+            document.getElementById('stickyBookBtn').href = `booking.html?paket=${vendorId}`;
+
+            /* Show sticky bar when scrolled past hero */
+            const stickyCta = document.getElementById('stickyCta');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    stickyCta.classList.toggle('visible', !e.isIntersecting);
+                });
+            }, { threshold: 0 });
+            observer.observe(document.querySelector('.detail-hero') || document.querySelector('h2'));
+        }
+
+        /* ── URL routing (same as original) ── */
+        function getVendorFromURL() {
+            return new URLSearchParams(window.location.search).get('vendor');
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             const vendorId = getVendorFromURL();
             if (vendorId) {
@@ -169,23 +793,16 @@
             }
         });
 
-        // Load related vendors
         function loadRelatedVendors(currentVendorId) {
             const allVendors = getAllVendors();
             const related = allVendors.filter(v => v.id !== currentVendorId).slice(0, 3);
-
             if (related.length === 0) return;
-
             const container = document.getElementById('relatedVendors');
-            let html = `
-                <h2 style="font-size: 2rem; color: var(--primary); margin-bottom: 2rem;">Layanan Terkait</h2>
-                <div class="grid grid-3">
-            `;
-
+            let html = `<h2 style="font-size:2rem; color:var(--primary); margin-bottom:2rem;">Layanan Terkait</h2><div class="grid grid-3">`;
             related.forEach(vendor => {
                 html += `
                     <a href="detail-paket.html?vendor=${vendor.id}" class="vendor-card">
-                        <div class="vendor-image">${vendor.emoji}</div>
+                        <div class="vendor-image">${vendor.image ? `<img src="${vendor.image}" alt="${vendor.title}" loading="lazy">` : `<i class="bi bi-image"></i>`}</div>
                         <div class="vendor-info">
                             <h3>${vendor.title}</h3>
                             <p>${vendor.description.substring(0, 80)}...</p>
@@ -194,21 +811,17 @@
                     </a>
                 `;
             });
-
             html += '</div>';
             container.innerHTML = html;
         }
 
-        // Handle logout
         function handleLogout(e) {
             e.preventDefault();
             if (confirm('Apakah Anda yakin ingin logout?')) {
                 lokaAuth.logout();
                 updateNavbarUser();
                 showAlert('Logout berhasil!', 'success');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
+                setTimeout(() => { window.location.href = 'index.html'; }, 1500);
             }
         }
     </script>

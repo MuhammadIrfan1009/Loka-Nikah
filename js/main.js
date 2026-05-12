@@ -1,8 +1,3 @@
-/* ======================================================
-   LOKA NIKAH — Main JS
-   Tech-Forward · Minimalis Indonesia · Glamour
-   ====================================================== */
-
 // ==================== SMOOTH SCROLL ==================== //
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -63,7 +58,6 @@ function updateActiveNav() {
 document.addEventListener('DOMContentLoaded', updateActiveNav);
 
 // ==================== HEADER SCROLL BEHAVIOUR ==================== //
-// Adds .scrolled class for glass shrink effect
 
 (function initHeaderScroll() {
     const header = document.querySelector('header');
@@ -74,11 +68,7 @@ document.addEventListener('DOMContentLoaded', updateActiveNav);
     function onScroll() {
         if (!ticking) {
             requestAnimationFrame(() => {
-                if (window.scrollY > 40) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
+                header.classList.toggle('scrolled', window.scrollY > 40);
                 ticking = false;
             });
             ticking = true;
@@ -86,11 +76,10 @@ document.addEventListener('DOMContentLoaded', updateActiveNav);
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll(); // Run once on load
+    onScroll();
 })();
 
 // ==================== SCROLL-TRIGGERED ANIMATIONS ==================== //
-// Observes [data-animate] elements and stagger-indexes siblings
 
 const observerOptions = {
     threshold: 0.10,
@@ -100,19 +89,16 @@ const observerOptions = {
 const observer = new IntersectionObserver(function (entries) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            const el = entry.target;
-            el.classList.add('slide-up');
-            observer.unobserve(el);
+            entry.target.classList.add('slide-up');
+            observer.unobserve(entry.target);
         }
     });
 }, observerOptions);
 
-// Auto-stagger children of [data-stagger] containers
 const staggerObserver = new IntersectionObserver(function (entries) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            const children = entry.target.children;
-            Array.from(children).forEach((child, i) => {
+            Array.from(entry.target.children).forEach((child, i) => {
                 child.style.animationDelay = `${i * 0.1}s`;
                 child.classList.add('slide-up');
             });
@@ -146,7 +132,10 @@ const vendorDatabase = {
         title: 'Catering Eksklusif',
         category: 'Layanan Kuliner',
         price: 'Mulai dari Rp 250.000/pax',
-        emoji: '🍽️',
+        priceMin: 250000,
+        priceUnit: 'per pax',
+        image: 'assets/images/catering.jpeg',
+        emoji: '<i class="bi bi-utensils"></i>',
         description: 'Layanan catering premium dengan menu berkualitas tinggi yang dapat disesuaikan dengan preferensi dan budget Anda. Semua disajikan dengan presentasi yang elegan.',
         fullDescription: 'Catering eksklusif Loka Nikah menghadirkan pengalaman kuliner yang tak terlupakan untuk hari istimewa Anda. Tim chef berpengalaman kami siap menyiapkan menu yang disesuaikan dengan tema dan jumlah tamu. Dari menu tradisional hingga fusion modern, semua dirancang untuk memberikan kepuasan maksimal.',
         specs: {
@@ -167,7 +156,10 @@ const vendorDatabase = {
         title: 'MUA by Loka Team — Soft Glam',
         category: 'Makeup & Styling',
         price: 'Mulai dari Rp 500.000/orang',
-        emoji: '✨',
+        priceMin: 500000,
+        priceUnit: 'per orang',
+        image: 'assets/images/makeup.jpeg',
+        emoji: '<i class="bi bi-palette"></i>',
         description: 'Makeup artist profesional dengan pengalaman bertahun-tahun. Spesialisasi pada soft glam look yang timeless, elegan, dan tahan lama untuk menghadapi cuaca tropis.',
         fullDescription: 'Tim makeup artist Loka Nikah berdedikasi untuk membuat Anda tampil percaya diri dan memukau di hari istimewa. Dengan teknik dan produk berkualitas internasional, kami menciptakan look yang tahan lama dan sesuai dengan karakter Anda.',
         specs: {
@@ -188,7 +180,9 @@ const vendorDatabase = {
         title: 'Fotografer Premium',
         category: 'Dokumentasi & Fotografi',
         price: 'Mulai dari Rp 8.000.000',
-        emoji: '📸',
+        priceMin: 8000000,
+        image: 'assets/images/fotografi.jpeg',
+        emoji: '<i class="bi bi-camera"></i>',
         description: 'Dokumentasi profesional dengan peralatan kamera terkini. Hasil editing berkualitas tinggi dengan aesthetic konsisten sesuai tema pernikahan Anda.',
         fullDescription: 'Fotografer Loka Nikah menggunakan peralatan profesional terkini untuk mengabadikan setiap momen berharga pernikahan Anda. Setiap foto diedit dengan cermat untuk menciptakan album yang indah dan bercerita.',
         specs: {
@@ -209,7 +203,9 @@ const vendorDatabase = {
         title: 'Dekorasi Minimalis',
         category: 'Dekorasi & Styling',
         price: 'Mulai dari Rp 3.000.000',
-        emoji: '🎀',
+        priceMin: 3000000,
+        image: 'assets/images/dekorasi.jpeg',
+        emoji: '<i class="bi bi-flower1"></i>',
         description: 'Desain dekorasi modern dengan konsep minimalis yang elegan. Menggunakan material berkualitas dengan warna-warna netral yang timeless dan sophisticated.',
         fullDescription: 'Dekorasi Loka Nikah menampilkan konsep minimalis modern yang elegan dan sophisticated. Setiap elemen dirancang dengan cermat untuk menciptakan suasana yang nyaman dan mengesankan bagi Anda dan tamu-tamu.',
         specs: {
@@ -230,7 +226,9 @@ const vendorDatabase = {
         title: 'Entertainment & MC Profesional',
         category: 'Entertainment & Hiburan',
         price: 'Mulai dari Rp 2.000.000',
-        emoji: '🎵',
+        priceMin: 2000000,
+        image: 'assets/images/entertainment.jpeg',
+        emoji: '<i class="bi bi-music-note"></i>',
         description: 'MC profesional yang berpengalaman dengan kemampuan menghibur dan memandu acara dengan mulus. Paket entertainment dapat disesuaikan dengan preferensi musik dan hiburan.',
         fullDescription: 'MC dan entertainment team Loka Nikah siap membuat acara Anda menjadi meriah dan berkesan. Dengan pengalaman bertahun-tahun, kami memahami dinamika acara dan dapat menyesuaikan dengan keinginan Anda.',
         specs: {
@@ -251,7 +249,9 @@ const vendorDatabase = {
         title: 'Undangan Desain Custom',
         category: 'Undangan & Stationery',
         price: 'Mulai dari Rp 1.500.000',
-        emoji: '💌',
+        priceMin: 1500000,
+        image: 'assets/images/undangan.jpeg',
+        emoji: '<i class="bi bi-envelope"></i>',
         description: 'Desain undangan custom dengan konsep modern dan elegan. Setiap undangan dibuat dengan detail yang sempurna untuk mencerminkan kepribadian dan gaya Anda.',
         fullDescription: 'Undangan Loka Nikah dirancang khusus untuk Anda dengan mempertimbangkan tema, warna, dan gaya pernikahan Anda. Setiap detail dipikirkan dengan matang untuk menciptakan kesan pertama yang sempurna.',
         specs: {
@@ -270,14 +270,6 @@ const vendorDatabase = {
 };
 
 // ==================== FORM UTILITIES ==================== //
-
-function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function isValidPhone(phone) {
-    return /^(\+62|0)[0-9]{9,11}$/.test(phone.replace(/\s+/g, ''));
-}
 
 function showFormError(fieldId, message) {
     const field = document.getElementById(fieldId);
@@ -302,19 +294,18 @@ function clearFormErrors(formId) {
 }
 
 // ==================== ALERT SYSTEM ==================== //
-// Refined alert with icon + smooth dismiss
 
 const ALERT_ICONS = {
-    success: '✓',
-    error:   '✕',
-    warning: '⚠',
-    info:    'ℹ'
+    success: '<i class="bi bi-check-circle"></i>',
+    error:   '<i class="bi bi-x-circle"></i>',
+    warning: '<i class="bi bi-exclamation-triangle"></i>',
+    info:    '<i class="bi bi-info-circle"></i>'
 };
 
 function showAlert(message, type = 'info', duration = 5000) {
     const alertDiv = document.createElement('div');
     alertDiv.classList.add('alert', `alert-${type}`, 'fade-in');
-    alertDiv.innerHTML = `<span style="font-weight:700;font-size:0.9rem;flex-shrink:0">${ALERT_ICONS[type] || 'ℹ'}</span><span>${message}</span>`;
+    alertDiv.innerHTML = `<span style="font-weight:700;font-size:0.9rem;flex-shrink:0">${ALERT_ICONS[type] || ALERT_ICONS.info}</span><span>${message}</span>`;
 
     const container = document.querySelector('main') || document.body;
     container.insertBefore(alertDiv, container.firstChild);
@@ -404,7 +395,7 @@ function loadVendorDetail(vendorId) {
                     width:18px; height:18px; border:1.5px solid var(--primary);
                     border-radius:50%; display:flex; align-items:center;
                     justify-content:center; font-size:0.6rem; margin-top:2px;
-                ">✓</span>
+                "><i class="bi bi-check" style="font-size:0.5rem;"></i></span>
                 <span style="color:var(--dark); font-size:0.95rem;">${f}</span>
             </li>
         `).join('');
@@ -463,17 +454,80 @@ function setBookingPackage(paketId) {
     if (select) select.value = paketId;
 }
 
+// ==================== UI/UX ENHANCEMENTS ==================== //
+
+function initRippleEffect() {
+    document.querySelectorAll('.btn, .vendor-card').forEach(el => {
+        el.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple-effect');
+            this.appendChild(ripple);
+
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+}
+
+function initHoverEffects() {
+    // Enhanced card hover with scale and glow
+    document.querySelectorAll('.vendor-card, .feature-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+            this.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1), 0 0 20px rgba(140,94,88,0.2)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.boxShadow = '';
+        });
+    });
+
+    // Button hover with subtle lift
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 8px 20px rgba(140,94,88,0.3)';
+        });
+
+        btn.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.boxShadow = '';
+        });
+    });
+
+    // Input focus effects
+    document.querySelectorAll('input, textarea, select').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.01)';
+            this.parentElement.style.boxShadow = '0 0 0 3px rgba(140,94,88,0.1)';
+        });
+
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = '';
+            this.parentElement.style.boxShadow = '';
+        });
+    });
+}
+
 // ==================== CARD TILT EFFECT ==================== //
-// Subtle 3D tilt on vendor/feature cards — glamour micro-interaction
 
 function initCardTilt() {
     document.querySelectorAll('.vendor-card, .feature-card, .card').forEach(card => {
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
-            const cx   = rect.left + rect.width  / 2;
-            const cy   = rect.top  + rect.height / 2;
-            const dx   = (e.clientX - cx) / (rect.width  / 2);
-            const dy   = (e.clientY - cy) / (rect.height / 2);
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dx = (e.clientX - cx) / (rect.width / 2);
+            const dy = (e.clientY - cy) / (rect.height / 2);
             card.style.transform = `translateY(-7px) rotateX(${-dy * 3}deg) rotateY(${dx * 3}deg)`;
         });
 
@@ -481,6 +535,179 @@ function initCardTilt() {
             card.style.transform = '';
         });
     });
+}
+
+// ==================== CURSOR GLOW EFFECT ==================== //
+
+function initCursorGlow() {
+    // Create glow element
+    const glow = document.createElement('div');
+    glow.id = 'cursor-glow';
+    glow.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        background: radial-gradient(circle, rgba(140,94,88,0.3) 0%, rgba(140,94,88,0.1) 50%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transition: transform 0.1s ease-out;
+        opacity: 0;
+    `;
+    document.body.appendChild(glow);
+
+    let mouseX = 0, mouseY = 0;
+    let glowX = 0, glowY = 0;
+
+    function updateGlow() {
+        glowX += (mouseX - glowX) * 0.1;
+        glowY += (mouseY - glowY) * 0.1;
+
+        glow.style.transform = `translate(${glowX - 10}px, ${glowY - 10}px)`;
+        requestAnimationFrame(updateGlow);
+    }
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        glow.style.opacity = '1';
+    });
+
+    document.addEventListener('mouseleave', () => {
+        glow.style.opacity = '0';
+    });
+
+    updateGlow();
+}
+
+// ==================== SPARKLE EFFECTS ==================== //
+
+function createSparkle(x, y) {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle';
+    sparkle.style.cssText = `
+        position: fixed;
+        left: ${x}px;
+        top: ${y}px;
+        width: 4px;
+        height: 4px;
+        background: var(--primary);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 10000;
+        animation: sparkle 0.8s ease-out forwards;
+    `;
+    document.body.appendChild(sparkle);
+
+    setTimeout(() => sparkle.remove(), 800);
+}
+
+function initSparkleEffects() {
+    // Add sparkle on button hover
+    document.querySelectorAll('.btn, .vendor-card, .feature-card').forEach(el => {
+        el.addEventListener('mouseenter', (e) => {
+            const rect = el.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Create multiple sparkles
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    createSparkle(centerX + (Math.random() - 0.5) * 40, centerY + (Math.random() - 0.5) * 40);
+                }, i * 100);
+            }
+        });
+    });
+}
+
+// ==================== ENHANCED ANIMATIONS ==================== //
+
+function initEnhancedAnimations() {
+    // Floating elements animation
+    document.querySelectorAll('[data-float]').forEach(el => {
+        el.style.animation = `float 6s ease-in-out infinite`;
+        el.style.animationDelay = Math.random() * 2 + 's';
+    });
+
+    // Pulse effect for important elements
+    document.querySelectorAll('[data-pulse]').forEach(el => {
+        el.style.animation = `pulse 2s ease-in-out infinite`;
+    });
+
+    // Shimmer effect for special elements
+    document.querySelectorAll('[data-shimmer]').forEach(el => {
+        el.style.position = 'relative';
+        el.style.overflow = 'hidden';
+
+        const shimmer = document.createElement('div');
+        shimmer.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 3s infinite;
+        `;
+        el.appendChild(shimmer);
+    });
+}
+
+// ==================== PARALLAX EFFECTS ==================== //
+
+function initParallax() {
+    const parallaxElements = document.querySelectorAll('[data-parallax]');
+
+    function updateParallax() {
+        const scrolled = window.pageYOffset;
+
+        parallaxElements.forEach(el => {
+            const speed = el.dataset.parallax || 0.5;
+            el.style.transform = `translateY(${scrolled * speed}px)`;
+        });
+
+        requestAnimationFrame(updateParallax);
+    }
+
+    if (parallaxElements.length > 0) {
+        updateParallax();
+    }
+}
+
+// ==================== MAGNETIC ELEMENTS ==================== //
+
+function initMagneticElements() {
+    document.querySelectorAll('[data-magnetic]').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const deltaX = (e.clientX - centerX) * 0.3;
+            const deltaY = (e.clientY - centerY) * 0.3;
+
+            el.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        });
+
+        el.addEventListener('mouseleave', () => {
+            el.style.transform = '';
+        });
+    });
+}
+
+// ==================== LOADING STATES ==================== //
+
+function showLoading(button) {
+    if (!button) return;
+    button.disabled = true;
+    button.innerHTML = '<i class="bi bi-arrow-repeat spinning"></i> Memproses...';
+}
+
+function hideLoading(button, originalText) {
+    if (!button) return;
+    button.disabled = false;
+    button.innerHTML = originalText;
 }
 
 // ==================== INITIALIZATION ==================== //
@@ -500,16 +727,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const paket = getBookingPackageFromURL();
     if (paket) setBookingPackage(paket);
 
-    // Card tilt (RAF for layout stability)
-    requestAnimationFrame(initCardTilt);
+    // Initialize all UI enhancements
+    requestAnimationFrame(() => {
+        initCardTilt();
+        initRippleEffect();
+        initHoverEffects();
+        initCursorGlow();
+        initSparkleEffects();
+        initEnhancedAnimations();
+        initParallax();
+        initMagneticElements();
+    });
 });
 
 // Prevent accidental form resubmission
 document.addEventListener('submit', (_e) => {
     // Handled by individual form controllers
 });
-
-console.log('%c✦ Loka Nikah %c— Loaded', 
-    'font-family:serif; font-size:14px; color:#8C5E58; font-weight:bold;',
-    'font-family:serif; font-size:12px; color:#7A7A7A;'
-);

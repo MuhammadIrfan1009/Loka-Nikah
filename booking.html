@@ -18,6 +18,7 @@
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
     <!-- Header -->
@@ -32,7 +33,7 @@
                 </div>
             </div>
 
-            <<button 
+            <button 
                 class="nav-toggle" 
                 id="navToggle"
                 aria-label="Toggle navigation"
@@ -132,7 +133,7 @@
                         <h3 style="color: var(--primary); font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 1.5rem;">Paket yang Diinginkan</h3>
 
                         <div class="form-group">
-                            <label for="booking-package">Pilih Paket *</label>
+                            <label for="booking-package">Pilih Paket Utama *</label>
                             <select id="booking-package" name="package" required>
                                 <option value="">-- Pilih Paket --</option>
                                 <option value="catering">Catering Eksklusif</option>
@@ -141,19 +142,21 @@
                                 <option value="dekorasi">Dekorasi Minimalis</option>
                                 <option value="entertainment">Entertainment & MC Profesional</option>
                                 <option value="undangan">Undangan Desain Custom</option>
-                                <option value="paket-bundle">Paket Bundle (Multiple Vendor)</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label style="display: flex; align-items: center;">
                                 <input type="checkbox" id="booking-multiple" name="multiple" style="margin-right: 0.5rem;">
-                                <span>Saya ingin mepesan lebih dari satu paket</span>
+                                <span>Saya ingin pesan lebih dari satu paket (bundle multi-layanan)</span>
                             </label>
+                            <p id="multiPackageNote" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                                Centang jika Anda ingin memilih setidaknya 2 layanan sekaligus. Estimasi harga akan ditampilkan berdasarkan semua paket yang dipilih.
+                            </p>
                         </div>
 
                         <div id="additionalPackages" style="display: none; margin-top: 1rem;">
-                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Pilih paket tambahan:</p>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Pilih minimal 2 paket tambahan untuk paket bundle:</p>
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
                                 <label style="display: flex; align-items: center;">
                                     <input type="checkbox" name="packages" value="catering">
@@ -194,12 +197,58 @@
 
                         <div class="form-group">
                             <label for="booking-budget">Budget Estimasi (Opsional)</label>
-                            <input type="text" id="booking-budget" name="budget" placeholder="Misal: 500 juta - 1 miliar">
+                            <input type="text" id="booking-budget" name="budget" placeholder="Contoh: 500000000 atau 5e8" aria-describedby="budgetHelp">
+                            <p id="budgetHelp" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                                Masukkan angka budget yang Anda siapkan. Sistem akan memberi tahu apakah budget ini sudah cukup terhadap estimasi paket yang dipilih.
+                            </p>
                         </div>
 
                         <div class="form-group">
                             <label for="booking-notes">Catatan Khusus / Permintaan Spesial</label>
                             <textarea id="booking-notes" name="notes" placeholder="Ceritakan detail tentang pernikahan impian Anda, preferensi khusus, atau pertanyaan apapun..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Pricing & Payment Info -->
+                    <div class="form-section" id="step5" style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--secondary);">
+                        <h3 style="color: var(--primary); font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 1.5rem;">💰 Informasi Harga & Pembayaran</h3>
+
+                        <!-- Price Display -->
+                        <div id="priceDisplay" style="background: var(--secondary); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                <span style="color: var(--text-muted); font-size: 0.9rem;">Paket Dipilih:</span>
+                                <span id="selectedPackageLabel" style="color: var(--primary); font-weight: 700; font-size: 1rem;">—</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid rgba(140,94,88,0.2);">
+                                <span style="color: var(--dark); font-weight: 600;">Estimasi Harga:</span>
+                                <span id="selectedPrice" style="color: var(--primary); font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 700;">—</span>
+                            </div>
+                            <div id="priceBreakdown" style="margin-top: 0.85rem; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">
+                                Pilih paket untuk melihat rincian estimasi harga.
+                            </div>
+                            <div id="budgetStatus" style="margin-top: 0.75rem; color: var(--dark); font-size: 0.9rem; line-height: 1.5;"></div>
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0.75rem 0 0 0;">
+                                * Harga di atas adalah estimasi awal. Harga final akan dikonfirmasi oleh tim vendor setelah berkonsultasi dengan Anda.
+                            </p>
+                        </div>
+
+                        <!-- Payment Info -->
+                        <div style="background: #faf9f7; padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                            <h4 style="color: var(--primary); margin: 0 0 1rem 0; font-family: 'Plus Jakarta Sans', sans-serif;">Proses Pembayaran:</h4>
+                            <ol style="color: var(--dark); line-height: 1.8; margin: 0; padding-left: 1.5rem;">
+                                <li style="margin-bottom: 0.75rem;">
+                                    <strong>Booking Awal:</strong> Serah deposit 30% setelah konfirmasi booking
+                                </li>
+                                <li style="margin-bottom: 0.75rem;">
+                                    <strong>Persiapan:</strong> Lunasi 50% saat mulai fase persiapan (3 bulan sebelum H)
+                                </li>
+                                <li style="margin-bottom: 0.75rem;">
+                                    <strong>Finalisasi:</strong> Bayar 20% sebagai final payment (1 minggu sebelum H)
+                                </li>
+                                <li>
+                                    <strong>Metode Pembayaran:</strong> Transfer bank, e-wallet, atau cicilan (dengan persetujuan)
+                                </li>
+                            </ol>
                         </div>
                     </div>
 
@@ -221,13 +270,14 @@
 
             <!-- Info Box -->
             <div style="background: var(--secondary); padding: 2rem; border-radius: 12px; margin-top: 2rem;">
-                <h3 style="color: var(--primary); margin-bottom: 1rem;">ℹ️ Informasi Penting</h3>
+                <h3 style="color: var(--primary); margin-bottom: 1rem;"><i class="bi bi-info-circle"></i> Informasi Penting</h3>
                 <ul style="color: var(--dark); line-height: 1.8;">
-                    <li>✓ Booking harus dilakukan oleh salah satu dari kedua pengantin</li>
-                    <li>✓ Tim kami akan menghubungi Anda dalam 24 jam untuk konfirmasi</li>
-                    <li>✓ Tanggal yang sudah di-booking tidak dapat diubah tanpa proses tertentu</li>
-                    <li>✓ Pembayaran akan diklarifikasi saat meeting dengan vendor</li>
-                    <li>✓ Dapatkan konsultasi gratis dengan vendor pilihan Anda</li>
+                    <li><i class="bi bi-check"></i> Booking hanya dapat dilakukan oleh salah satu dari kedua pengantin yang sudah login</li>
+                    <li><i class="bi bi-check"></i> Satu akun user hanya dapat memiliki satu booking aktif pada saat yang sama</li>
+                    <li><i class="bi bi-check"></i> Tim kami akan menghubungi Anda dalam 24 jam untuk konfirmasi dan finalisasi harga</li>
+                    <li><i class="bi bi-check"></i> Harga yang ditampilkan adalah estimasi awal dan dapat berubah sesuai detail acara Anda</li>
+                    <li><i class="bi bi-check"></i> Pembayaran dilakukan secara bertahap sesuai timeline (deposit 30%, progress 50%, final 20%)</li>
+                    <li><i class="bi bi-check"></i> Dapatkan konsultasi gratis dengan vendor pilihan sebelum menentukan keputusan akhir</li>
                 </ul>
             </div>
         </div>
@@ -330,36 +380,229 @@
                 document.getElementById('booking-name').value = user.name;
             }
 
+            // Cek apakah user sudah punya booking aktif
+            const userBookings = lokaAuth.getUserBookings();
+            const activeBooking = userBookings.find(b => b.status !== 'cancelled');
+
+            if (activeBooking) {
+                // User sudah punya booking aktif - tampilkan pesan dan disable form
+                document.getElementById('bookingForm').style.display = 'none';
+                const messageDiv = document.getElementById('bookingMessage');
+                messageDiv.innerHTML = `
+                    <div class="alert" style="background: #fff0ef; border: 1.5px solid #d9534f; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+                        <h3 style="color: #d9534f; margin: 0 0 0.75rem 0; font-family: 'Cormorant Garamond', serif;"><i class="bi bi-exclamation-triangle"></i> Booking Sudah Aktif</h3>
+                        <p style="color: var(--dark); margin: 0 0 1rem 0; line-height: 1.6;">
+                            Anda sudah memiliki booking aktif untuk pernikahan <strong>${activeBooking.names} & ${activeBooking.partner}</strong> 
+                            pada tanggal <strong>${new Date(activeBooking.date).toLocaleDateString('id-ID', {year: 'numeric', month: 'long', day: 'numeric'})}</strong>.
+                        </p>
+                        <p style="color: var(--text-muted); margin: 0 0 1rem 0; font-size: 0.9rem;">
+                            Untuk membuat booking baru, silakan batalkan booking sebelumnya di halaman <a href="tracking.html" style="color: var(--primary); text-decoration: underline;">Tracking Progres</a>, 
+                            atau hubungi tim customer service kami untuk bantuan lebih lanjut.
+                        </p>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <a href="tracking.html" class="btn btn-primary" style="padding: 0.6rem 1.25rem; text-decoration: none;">
+                                Lihat Booking Saya
+                            </a>
+                            <a href="paket.html" class="btn btn-secondary" style="padding: 0.6rem 1.25rem; text-decoration: none;">
+                                Kembali ke Layanan
+                            </a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
             // Set package from URL if provided
             const paket = getBookingPackageFromURL();
             if (paket) {
                 setBookingPackage(paket);
             }
+
+            // Initialize price display
+            const packageId = document.getElementById('booking-package').value;
+            if (packageId && vendorDatabase[packageId]) {
+                const pkg = vendorDatabase[packageId];
+                document.getElementById('selectedPackageLabel').textContent = pkg.title;
+                document.getElementById('selectedPrice').textContent = pkg.price;
+            }
         });
 
-        // Toggle multiple packages checkbox
-        document.getElementById('booking-multiple').addEventListener('change', function() {
-            document.getElementById('additionalPackages').style.display = this.checked ? 'block' : 'none';
-        });
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+
+        function getSelectedPackageIds() {
+            const isMulti = document.getElementById('booking-multiple').checked;
+            if (!isMulti) {
+                const selected = document.getElementById('booking-package').value;
+                return selected ? [selected] : [];
+            }
+
+            return Array.from(document.querySelectorAll('#additionalPackages input[name="packages"]:checked')).map(el => el.value);
+        }
+
+        function parseBudget(value) {
+            if (!value) return 0;
+            const digits = value.toString().replace(/[^0-9]/g, '');
+            return digits ? parseInt(digits, 10) : 0;
+        }
+
+        function updatePriceDisplay() {
+            const packageIds = getSelectedPackageIds();
+            const selectedLabel = document.getElementById('selectedPackageLabel');
+            const selectedPrice = document.getElementById('selectedPrice');
+            const breakdownEl = document.getElementById('priceBreakdown');
+            const budgetStatusEl = document.getElementById('budgetStatus');
+            const guestCount = parseInt(document.getElementById('booking-guests').value, 10) || 0;
+            const budgetAmount = parseBudget(document.getElementById('booking-budget').value);
+
+            function updateBudgetStatus(totalCost) {
+                if (!budgetAmount) {
+                    budgetStatusEl.textContent = 'Masukkan budget untuk melihat apakah dana Anda sudah sesuai estimasi.';
+                    return;
+                }
+
+                const diff = budgetAmount - totalCost;
+                if (diff >= 0) {
+                    budgetStatusEl.innerHTML = `<strong style="color: #2a7a3b;">Budget Anda cukup</strong> — sisa sekitar ${formatCurrency(diff)} setelah estimasi.`;
+                } else {
+                    budgetStatusEl.innerHTML = `<strong style="color: #c0392b;">Budget Anda kurang</strong> — butuh tambahan sekitar ${formatCurrency(Math.abs(diff))}.`;
+                }
+            }
+
+            if (!packageIds.length) {
+                selectedLabel.textContent = 'Belum dipilih';
+                selectedPrice.textContent = '—';
+                breakdownEl.textContent = 'Pilih paket utama atau aktifkan pilihan multi-paket untuk melihat estimasi harga.';
+                budgetStatusEl.textContent = 'Masukkan budget untuk melihat apakah dana Anda sudah sesuai estimasi.';
+                return;
+            }
+
+            if (packageIds.length === 1) {
+                const pkg = vendorDatabase[packageIds[0]];
+                if (!pkg) {
+                    selectedLabel.textContent = 'Belum dipilih';
+                    selectedPrice.textContent = '—';
+                    breakdownEl.textContent = 'Pilih paket untuk melihat estimasi harga.';
+                    budgetStatusEl.textContent = 'Masukkan budget untuk melihat apakah dana Anda sudah sesuai estimasi.';
+                    return;
+                }
+
+                selectedLabel.textContent = pkg.title;
+                selectedPrice.textContent = pkg.price;
+
+                let breakdownText = `• ${pkg.title}: ${pkg.price}`;
+                let estimatedTotal = 0;
+                if (pkg.priceMin != null) {
+                    if ((pkg.priceUnit === 'per pax' || pkg.priceUnit === 'per orang') && guestCount) {
+                        estimatedTotal = pkg.priceMin * guestCount;
+                        breakdownText += ` → ${formatCurrency(estimatedTotal)} untuk ${guestCount} ${pkg.priceUnit === 'per pax' ? 'tamu' : 'orang'}`;
+                    } else {
+                        estimatedTotal = pkg.priceMin;
+                        breakdownText += ` → ${formatCurrency(pkg.priceMin)}`;
+                    }
+                }
+
+                breakdownEl.innerHTML = breakdownText;
+                if (estimatedTotal > 0) {
+                    updateBudgetStatus(estimatedTotal);
+                } else {
+                    budgetStatusEl.textContent = 'Masukkan budget untuk melihat apakah dana Anda sudah sesuai estimasi.';
+                }
+                return;
+            }
+
+            selectedLabel.textContent = `${packageIds.length} Paket Dipilih`;
+            const lines = [];
+            let total = 0;
+            let canCompute = true;
+
+            packageIds.forEach(id => {
+                const pkg = vendorDatabase[id];
+                if (!pkg) return;
+                let line = `• ${pkg.title}: ${pkg.price}`;
+
+                if (pkg.priceMin != null) {
+                    if ((pkg.priceUnit === 'per pax' || pkg.priceUnit === 'per orang') && guestCount) {
+                        const itemTotal = pkg.priceMin * guestCount;
+                        line += ` → ${formatCurrency(itemTotal)}`;
+                        total += itemTotal;
+                    } else {
+                        line += ` → ${formatCurrency(pkg.priceMin)}`;
+                        total += pkg.priceMin;
+                    }
+                } else {
+                    canCompute = false;
+                }
+
+                lines.push(line);
+            });
+
+            if (canCompute && total > 0) {
+                const discount = Math.round(total * 0.1);
+                const discountedTotal = total - discount;
+                selectedPrice.textContent = formatCurrency(discountedTotal);
+                breakdownEl.innerHTML = `${lines.join('<br>')}<br><br><strong>Subtotal:</strong> ${formatCurrency(total)}<br><strong>Diskon bundle 10%:</strong> ${formatCurrency(discount)}<br><strong>Estimasi total setelah diskon:</strong> ${formatCurrency(discountedTotal)}`;
+                updateBudgetStatus(discountedTotal);
+            } else {
+                selectedPrice.textContent = 'Lihat rincian';
+                breakdownEl.innerHTML = `${lines.join('<br>')}<br><br><em>Estimasi final akan dikonfirmasi oleh tim setelah konsultasi.</em>`;
+                budgetStatusEl.textContent = budgetAmount ? 'Budget dapat diperiksa setelah estimasi final tersedia.' : 'Masukkan budget untuk melihat apakah dana Anda sudah sesuai estimasi.';
+            }
+        }
+
+        function updatePackageSelectionMode() {
+            const isMulti = document.getElementById('booking-multiple').checked;
+            document.getElementById('additionalPackages').style.display = isMulti ? 'block' : 'none';
+            document.getElementById('booking-package').disabled = isMulti;
+
+            if (!isMulti) {
+                document.querySelectorAll('#additionalPackages input[name="packages"]').forEach(el => el.checked = false);
+            }
+
+            updatePriceDisplay();
+        }
+
+        document.getElementById('booking-multiple').addEventListener('change', updatePackageSelectionMode);
+        document.getElementById('booking-package').addEventListener('change', updatePriceDisplay);
+        document.getElementById('booking-budget').addEventListener('input', updatePriceDisplay);
+        document.getElementById('booking-guests').addEventListener('input', updatePriceDisplay);
+        document.querySelectorAll('#additionalPackages input[name="packages"]').forEach(el => el.addEventListener('change', updatePriceDisplay));
+
+        updatePackageSelectionMode();
 
         // Handle form submission
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             clearFormErrors('bookingForm');
 
+            const selectedPackages = getSelectedPackageIds();
+            if (document.getElementById('booking-multiple').checked && selectedPackages.length < 2) {
+                showAlert('Pilih minimal 2 paket untuk paket bundle.', 'error');
+                return;
+            }
+
             // Get form data
             const formData = {
                 names: document.getElementById('booking-name').value,
                 partner: document.getElementById('booking-partner').value,
                 date: document.getElementById('booking-date').value,
+                time: document.getElementById('booking-time').value,
                 location: document.getElementById('booking-location').value,
+                venue: document.getElementById('booking-venue').value,
                 guests: document.getElementById('booking-guests').value,
-                packages: document.getElementById('booking-package').value,
+                packages: selectedPackages,
+                theme: document.getElementById('booking-theme').value,
+                budget: document.getElementById('booking-budget').value,
                 notes: document.getElementById('booking-notes').value
             };
 
             // Validate
-            if (!formData.names || !formData.partner || !formData.date || !formData.location || !formData.guests || !formData.packages) {
+            if (!formData.names || !formData.partner || !formData.date || !formData.location || !formData.guests || !formData.packages.length || !formData.time) {
                 showAlert('Semua field yang diperlukan harus diisi!', 'error');
                 return;
             }
@@ -370,10 +613,14 @@
             if (result.success) {
                 const messageDiv = document.getElementById('bookingMessage');
                 messageDiv.innerHTML = `<div class="alert alert-success">
-                    ✓ ${result.message} Tanggal pernikahan Anda: <strong>${formatDateOnly(formData.date)}</strong>
+                    <i class="bi bi-check-circle"></i> ${result.message} Tanggal pernikahan Anda: <strong>${formatDateOnly(formData.date)}</strong>
                 </div>`;
                 
                 showAlert(result.message, 'success');
+                
+                // Clear form
+                document.getElementById('bookingForm').reset();
+                updatePackageSelectionMode();
                 
                 setTimeout(() => {
                     window.location.href = 'tracking.html';

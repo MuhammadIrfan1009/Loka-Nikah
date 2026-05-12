@@ -226,12 +226,24 @@ class LokaAuth {
             };
         }
 
-        const { names, partner, date, location, guests, packages, notes } = bookingData;
+        const { names, partner, date, location, guests, packages, notes, venue, time, theme, budget } = bookingData;
 
         if (!names || !partner || !date || !location || !guests || !packages) {
             return {
                 success: false,
                 message: 'Semua field yang diperlukan harus diisi!'
+            };
+        }
+
+        // Cek apakah user sudah punya booking aktif
+        const activeBooking = this.bookings.find(
+            b => b.userId === this.currentUser.id && b.status !== 'cancelled'
+        );
+
+        if (activeBooking) {
+            return {
+                success: false,
+                message: 'Anda sudah memiliki booking aktif. Batalkan booking sebelumnya atau hubungi customer service kami untuk edit.'
             };
         }
 
@@ -241,9 +253,13 @@ class LokaAuth {
             names: names,
             partner: partner,
             date: date,
+            time: time || '',
             location: location,
+            venue: venue || '',
             guests: parseInt(guests),
             packages: Array.isArray(packages) ? packages : [packages],
+            theme: theme || '',
+            budget: budget || '',
             notes: notes || '',
             status: 'confirmed',
             timeline: {
