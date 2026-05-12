@@ -293,6 +293,19 @@ function clearFormErrors(formId) {
     form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
 }
 
+// ==================== VALIDATION FUNCTIONS ==================== //
+
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function isValidPhone(phone) {
+    // Indonesian phone number validation (starts with 08, 10-13 digits)
+    const phoneRegex = /^08[0-9]{8,11}$/;
+    return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''));
+}
+
 // ==================== ALERT SYSTEM ==================== //
 
 const ALERT_ICONS = {
