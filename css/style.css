@@ -1554,7 +1554,18 @@ footer h3 { font-size: 1.1rem; color: var(--light); margin-bottom: 1rem; }
 /* ==================== RESPONSIVE ==================== */
 
 @media (max-width: 768px) {
-    header            { padding: 1rem 1.25rem; position: relative; }
+    header {
+        padding: 1rem 1.25rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .header-container {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+    }
 
     .nav-toggle       { display: flex; }
 
@@ -1565,6 +1576,8 @@ footer h3 { font-size: 1.1rem; color: var(--light); margin-bottom: 1rem; }
         top: 100%;
         left: 0;
         right: 0;
+        max-height: calc(100vh - 72px);
+        overflow-y: auto;
         background: var(--glass-bg);
         backdrop-filter: var(--glass-blur);
         -webkit-backdrop-filter: var(--glass-blur);
@@ -1599,13 +1612,35 @@ footer h3 { font-size: 1.1rem; color: var(--light); margin-bottom: 1rem; }
     #userMenu a,
     #userMenu span    { width: 100%; }
 
-    .hero             { padding: 5rem 1.5rem; }
-    .hero h1          { font-size: clamp(2rem, 8vw, 3rem); }
-    .hero p           { font-size: 1rem; }
+    .hero {
+        padding: clamp(4rem, 10vw, 6rem) 1.25rem;
+        min-height: 62vh;
+    }
+
+    .hero-content {
+        padding: 0 0.35rem;
+    }
+
+    .hero h1 {
+        font-size: clamp(2rem, 8vw, 3rem);
+        line-height: 1.08;
+    }
+
+    .hero p {
+        font-size: 1rem;
+        max-width: 720px;
+        margin: 0 auto 1.75rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+    }
+
     .container,
     .container-md,
-    .container-sm     { padding: 2.5rem 1.25rem; }
-    .btn              { padding: 0.7rem 1.25rem; font-size: 0.85rem; }
+    .container-sm  { padding: 2.5rem 1.25rem; }
+    .btn           { padding: 0.7rem 1.25rem; font-size: 0.85rem; }
 }
 
 /* ==================== PRINT ==================== */
