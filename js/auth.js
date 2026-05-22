@@ -1,94 +1,72 @@
 /* ==================== LOKA NIKAH - AUTH.JS ==================== */
 /* Logika login, registrasi, dan session management */
 
+const STORAGE_KEYS = {
+    currentUser: 'lokaCurrentUser',
+    users: 'lokaUsers',
+    bookings: 'lokaBookings'
+};
+
+const BOOKING_TIMELINES = ['confirmation', 'fitting', 'deal', 'technical', 'wedding'];
+const AVATAR_COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F'];
+
 class LokaAuth {
     constructor() {
-        this.currentUser = this.loadUser();
-        this.users = this.loadUsers();
-        this.bookings = this.loadBookings();
+        this.currentUser = this.load(STORAGE_KEYS.currentUser);
+        this.users = this.load(STORAGE_KEYS.users, []);
+        this.bookings = this.load(STORAGE_KEYS.bookings, []);
     }
 
-    // Load user yang sedang login dari localStorage
-    loadUser() {
-        const user = localStorage.getItem('lokaCurrentUser');
-        return user ? JSON.parse(user) : null;
+    // Storage helper: Load dari localStorage
+    load(key, fallback = null) {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : fallback;
     }
 
-    // Simpan user ke localStorage
-    saveUser(user) {
-        localStorage.setItem('lokaCurrentUser', JSON.stringify(user));
-        this.currentUser = user;
+    // Storage helper: Save ke localStorage
+    save(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
     }
 
-    // Load semua users dari localStorage
-    loadUsers() {
-        const users = localStorage.getItem('lokaUsers');
-        return users ? JSON.parse(users) : [];
-    }
-
-    // Simpan semua users ke localStorage
-    saveUsers() {
-        localStorage.setItem('lokaUsers', JSON.stringify(this.users));
-    }
-
-    // Load semua bookings dari localStorage
-    loadBookings() {
-        const bookings = localStorage.getItem('lokaBookings');
-        return bookings ? JSON.parse(bookings) : [];
-    }
-
-    // Simpan semua bookings ke localStorage
-    saveBookings() {
-        localStorage.setItem('lokaBookings', JSON.stringify(this.bookings));
+    // Get user session (tanpa password)
+    getUserSession(user) {
+        const session = { ...user };
+        delete session.password;
+        return session;
     }
 
     // Registrasi user baru
     register(userData) {
         const { name, email, phone, password, confirm } = userData;
 
-        // Validasi
         if (!name || !email || !phone || !password || !confirm) {
-            return {
-                success: false,
-                message: 'Semua field harus diisi!'
-            };
+            return { success: false, message: 'Semua field harus diisi!' };
         }
 
         if (password !== confirm) {
-            return {
-                success: false,
-                message: 'Password dan konfirmasi password tidak cocok!'
-            };
+            return { success: false, message: 'Password dan konfirmasi password tidak cocok!' };
         }
 
         if (password.length < 6) {
-            return {
-                success: false,
-                message: 'Password minimal 6 karakter!'
-            };
+            return { success: false, message: 'Password minimal 6 karakter!' };
         }
 
-        // Cek email sudah terdaftar
         if (this.users.some(u => u.email === email)) {
-            return {
-                success: false,
-                message: 'Email sudah terdaftar! Silakan gunakan email lain atau login.'
-            };
+            return { success: false, message: 'Email sudah terdaftar! Silakan gunakan email lain atau login.' };
         }
 
-        // Buat user baru
         const newUser = {
             id: this.generateId(),
-            name: name,
-            email: email,
-            phone: phone,
-            password: this.hashPassword(password), // Simple hash
+            name,
+            email,
+            phone,
+            password: this.hashPassword(password),
             createdAt: new Date().toISOString(),
             avatar: this.getAvatarColor(name)
         };
 
         this.users.push(newUser);
-        this.saveUsers();
+        this.save(STORAGE_KEYS.users, this.users);
 
         return {
             success: true,
@@ -100,33 +78,22 @@ class LokaAuth {
     // Login user
     login(email, password) {
         if (!email || !password) {
-            return {
-                success: false,
-                message: 'Email dan password harus diisi!'
-            };
+            return { success: false, message: 'Email dan password harus diisi!' };
         }
 
         const user = this.users.find(u => u.email === email);
 
         if (!user) {
-            return {
-                success: false,
-                message: 'Email tidak terdaftar!'
-            };
+            return { success: false, message: 'Email tidak terdaftar!' };
         }
 
         if (user.password !== this.hashPassword(password)) {
-            return {
-                success: false,
-                message: 'Password salah!'
-            };
+            return { success: false, message: 'Password salah!' };
         }
 
-        // Jangan simpan password di currentUser
-        const userSession = { ...user };
-        delete userSession.password;
-
-        this.saveUser(userSession);
+        const userSession = this.getUserSession(user);
+        this.currentUser = userSession;
+        this.save(STORAGE_KEYS.currentUser, userSession);
 
         return {
             success: true,
@@ -137,17 +104,14 @@ class LokaAuth {
 
     // Logout
     logout() {
-        localStorage.removeItem('lokaCurrentUser');
+        localStorage.removeItem(STORAGE_KEYS.currentUser);
         this.currentUser = null;
-        return {
-            success: true,
-            message: 'Logout berhasil!'
-        };
+        return { success: true, message: 'Logout berhasil!' };
     }
 
     // Cek apakah user sudah login
     isAuthenticated() {
-        return this.currentUser !== null;
+        return !!this.currentUser;
     }
 
     // Get current user
@@ -158,32 +122,24 @@ class LokaAuth {
     // Update profile user
     updateProfile(userData) {
         if (!this.currentUser) {
-            return {
-                success: false,
-                message: 'User tidak ditemukan!'
-            };
+            return { success: false, message: 'User tidak ditemukan!' };
         }
 
         const userIndex = this.users.findIndex(u => u.id === this.currentUser.id);
 
         if (userIndex === -1) {
-            return {
-                success: false,
-                message: 'User tidak ditemukan di database!'
-            };
+            return { success: false, message: 'User tidak ditemukan di database!' };
         }
 
         const { name, phone } = userData;
-
         if (name) this.users[userIndex].name = name;
         if (phone) this.users[userIndex].phone = phone;
 
-        this.saveUsers();
+        this.save(STORAGE_KEYS.users, this.users);
 
-        // Update current user session
-        const updatedUser = { ...this.users[userIndex] };
-        delete updatedUser.password;
-        this.saveUser(updatedUser);
+        const updatedUser = this.getUserSession(this.users[userIndex]);
+        this.currentUser = updatedUser;
+        this.save(STORAGE_KEYS.currentUser, updatedUser);
 
         return {
             success: true,
@@ -192,12 +148,11 @@ class LokaAuth {
         };
     }
 
-    // Simple password hash (untuk demo)
+    // Hash password (simple untuk demo)
     hashPassword(password) {
         let hash = 0;
         for (let i = 0; i < password.length; i++) {
-            const char = password.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
+            hash = ((hash << 5) - hash) + password.charCodeAt(i);
             hash = hash & hash;
         }
         return 'hash_' + Math.abs(hash).toString(36);
@@ -205,14 +160,24 @@ class LokaAuth {
 
     // Generate ID unik
     generateId() {
-        return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        return `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     }
 
-    // Get random avatar color based on name
+    // Get avatar color dari nama user
     getAvatarColor(name) {
-        const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F'];
         const charCode = name.charCodeAt(0);
-        return colors[charCode % colors.length];
+        return AVATAR_COLORS[charCode % AVATAR_COLORS.length];
+    }
+
+    // Generate default timeline untuk booking
+    createBookingTimeline(date) {
+        return {
+            confirmation: { status: 'completed', date: new Date().toISOString() },
+            fitting: { status: 'completed', date: new Date(Date.now() + 7*24*60*60*1000).toISOString() },
+            deal: { status: 'ongoing', date: new Date(Date.now() + 14*24*60*60*1000).toISOString() },
+            technical: { status: 'pending', date: new Date(date).toISOString() },
+            wedding: { status: 'pending', date }
+        };
     }
 
     // ==================== BOOKING METHODS ====================
@@ -220,41 +185,27 @@ class LokaAuth {
     // Tambah booking baru
     createBooking(bookingData) {
         if (!this.currentUser) {
-            return {
-                success: false,
-                message: 'Anda harus login untuk melakukan booking!'
-            };
+            return { success: false, message: 'Anda harus login untuk melakukan booking!' };
         }
 
         const { names, partner, date, location, guests, packages, notes, venue, time, theme, budget } = bookingData;
 
         if (!names || !partner || !date || !location || !guests || !packages) {
-            return {
-                success: false,
-                message: 'Semua field yang diperlukan harus diisi!'
-            };
+            return { success: false, message: 'Semua field yang diperlukan harus diisi!' };
         }
 
-        // Cek apakah user sudah punya booking aktif
-        const activeBooking = this.bookings.find(
-            b => b.userId === this.currentUser.id && b.status !== 'cancelled'
-        );
-
-        if (activeBooking) {
-            return {
-                success: false,
-                message: 'Anda sudah memiliki booking aktif. Batalkan booking sebelumnya atau hubungi customer service kami untuk edit.'
-            };
+        if (this.bookings.some(b => b.userId === this.currentUser.id && b.status !== 'cancelled')) {
+            return { success: false, message: 'Anda sudah memiliki booking aktif. Batalkan booking sebelumnya atau hubungi customer service kami untuk edit.' };
         }
 
         const newBooking = {
             id: this.generateId(),
             userId: this.currentUser.id,
-            names: names,
-            partner: partner,
-            date: date,
+            names,
+            partner,
+            date,
             time: time || '',
-            location: location,
+            location,
             venue: venue || '',
             guests: parseInt(guests),
             packages: Array.isArray(packages) ? packages : [packages],
@@ -262,19 +213,13 @@ class LokaAuth {
             budget: budget || '',
             notes: notes || '',
             status: 'confirmed',
-            timeline: {
-                confirmation: { status: 'completed', date: new Date().toISOString() },
-                fitting: { status: 'completed', date: new Date(Date.now() + 7*24*60*60*1000).toISOString() },
-                deal: { status: 'ongoing', date: new Date(Date.now() + 14*24*60*60*1000).toISOString() },
-                technical: { status: 'pending', date: new Date(date).toISOString() },
-                wedding: { status: 'pending', date: date }
-            },
+            timeline: this.createBookingTimeline(date),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
 
         this.bookings.push(newBooking);
-        this.saveBookings();
+        this.save(STORAGE_KEYS.bookings, this.bookings);
 
         return {
             success: true,
@@ -285,11 +230,7 @@ class LokaAuth {
 
     // Get booking user saat ini
     getUserBookings() {
-        if (!this.currentUser) {
-            return [];
-        }
-
-        return this.bookings.filter(b => b.userId === this.currentUser.id);
+        return this.currentUser ? this.bookings.filter(b => b.userId === this.currentUser.id) : [];
     }
 
     // Get detail booking
@@ -302,123 +243,87 @@ class LokaAuth {
         const booking = this.getBooking(bookingId);
 
         if (!booking) {
-            return {
-                success: false,
-                message: 'Booking tidak ditemukan!'
-            };
+            return { success: false, message: 'Booking tidak ditemukan!' };
         }
 
-        if (booking.timeline[stage]) {
-            booking.timeline[stage].status = status;
-            booking.updatedAt = new Date().toISOString();
-            this.saveBookings();
-
-            return {
-                success: true,
-                message: 'Timeline berhasil diperbarui!',
-                booking: booking
-            };
+        if (!booking.timeline[stage]) {
+            return { success: false, message: 'Stage timeline tidak valid!' };
         }
+
+        booking.timeline[stage].status = status;
+        booking.updatedAt = new Date().toISOString();
+        this.save(STORAGE_KEYS.bookings, this.bookings);
 
         return {
-            success: false,
-            message: 'Stage timeline tidak valid!'
+            success: true,
+            message: 'Timeline berhasil diperbarui!',
+            booking
         };
     }
 
     // Get booking summary
     getBookingSummary(bookingId) {
         const booking = this.getBooking(bookingId);
+        if (!booking) return null;
 
-        if (!booking) {
-            return null;
-        }
-
-        const stages = ['confirmation', 'fitting', 'deal', 'technical', 'wedding'];
-        const completedCount = stages.filter(s => booking.timeline[s].status === 'completed').length;
-        const progress = Math.round((completedCount / stages.length) * 100);
+        const completedCount = BOOKING_TIMELINES.filter(s => booking.timeline[s].status === 'completed').length;
+        const progress = Math.round((completedCount / BOOKING_TIMELINES.length) * 100);
 
         return {
             ...booking,
-            progress: progress,
+            progress,
             isCompleted: booking.timeline.wedding.status === 'completed'
         };
     }
 }
 
-// Initialize auth globally
-const lokaAuth = new LokaAuth();
+// ==================== NAVBAR & UI HELPERS ====================
 
-// Helper function untuk display user info di navbar
+// Get elemen navbar
+function getNavbarElements() {
+    return {
+        userName: document.getElementById('userNameDisplay'),
+        authLinks: document.getElementById('authLinks'),
+        userMenu: document.getElementById('userMenu'),
+        heroButton: document.getElementById('heroActionButton'),
+        heroHint: document.getElementById('heroActionHint')
+    };
+}
+
+// Update navbar UI berdasarkan auth status
 function updateNavbarUser() {
-    const userNameEl = document.getElementById('userNameDisplay');
-    const authLinksEl = document.getElementById('authLinks');
-    const userMenuEl = document.getElementById('userMenu');
+    const el = getNavbarElements();
+    const isAuthenticated = lokaAuth.isAuthenticated();
+    const hasUsers = lokaAuth.users.length > 0;
 
-    const heroActionButton = document.getElementById('heroActionButton');
-    const heroActionHint = document.getElementById('heroActionHint');
-    const hasRegisteredUsers = lokaAuth.users.length > 0;
-
-    if (lokaAuth.isAuthenticated()) {
+    if (isAuthenticated) {
         const user = lokaAuth.getCurrentUser();
-
-        if (userNameEl) {
-            userNameEl.textContent = `Halo, ${user.name.split(' ')[0]}!`;
+        if (el.userName) el.userName.textContent = `Halo, ${user.name.split(' ')[0]}!`;
+        if (el.authLinks) el.authLinks.style.display = 'none';
+        if (el.userMenu) el.userMenu.style.display = 'flex';
+        if (el.heroButton) {
+            el.heroButton.textContent = 'Mulai Booking Sekarang';
+            el.heroButton.href = 'booking.html';
         }
-
-        if (authLinksEl) {
-            authLinksEl.style.display = 'none';
-        }
-
-        if (userMenuEl) {
-            userMenuEl.style.display = 'flex';
-        }
-
-        if (heroActionButton) {
-            heroActionButton.textContent = 'Mulai Booking Sekarang';
-            heroActionButton.href = 'booking.html';
-        }
-
-        if (heroActionHint) {
-            heroActionHint.style.display = 'none';
-            heroActionHint.innerHTML = '';
-        }
+        if (el.heroHint) el.heroHint.style.display = 'none';
     } else {
-        if (userNameEl) {
-            userNameEl.textContent = '';
+        if (el.userName) el.userName.textContent = '';
+        if (el.authLinks) el.authLinks.style.display = 'flex';
+        if (el.userMenu) el.userMenu.style.display = 'none';
+        if (el.heroButton) {
+            el.heroButton.textContent = hasUsers ? 'Masuk Sekarang' : 'Daftar Gratis Sekarang';
+            el.heroButton.href = hasUsers ? 'login.html' : 'register.html';
         }
-
-        if (authLinksEl) {
-            authLinksEl.style.display = 'flex';
-        }
-
-        if (userMenuEl) {
-            userMenuEl.style.display = 'none';
-        }
-
-        if (heroActionButton) {
-            if (hasRegisteredUsers) {
-                heroActionButton.textContent = 'Masuk Sekarang';
-                heroActionButton.href = 'login.html';
-            } else {
-                heroActionButton.textContent = 'Daftar Gratis Sekarang';
-                heroActionButton.href = 'register.html';
-            }
-        }
-
-        if (heroActionHint) {
-            if (hasRegisteredUsers) {
-                heroActionHint.style.display = 'block';
-                heroActionHint.innerHTML = 'Belum punya akun? <a href="register.html" style="color: inherit; text-decoration: underline;">Daftar Gratis</a>';
-            } else {
-                heroActionHint.style.display = 'none';
-                heroActionHint.innerHTML = '';
+        if (el.heroHint) {
+            el.heroHint.style.display = hasUsers ? 'block' : 'none';
+            if (hasUsers) {
+                el.heroHint.innerHTML = 'Belum punya akun? <a href="register.html" style="color: inherit; text-decoration: underline;">Daftar Gratis</a>';
             }
         }
     }
 }
 
-// Helper function untuk redirect jika belum login
+// Redirect ke login jika belum authenticated
 function requireAuth() {
     if (!lokaAuth.isAuthenticated()) {
         alert('Anda harus login terlebih dahulu untuk mengakses halaman ini.');
@@ -428,5 +333,6 @@ function requireAuth() {
     return true;
 }
 
-// Update navbar saat halaman load
+// Initialize
+const lokaAuth = new LokaAuth();
 document.addEventListener('DOMContentLoaded', updateNavbarUser);

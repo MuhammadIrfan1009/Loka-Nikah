@@ -61,10 +61,10 @@
     </header>
     <main>
         <div class="container-sm">
-            <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; text-align: center;">Daftar Akun Baru</h1>
-            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Bergabunglah dengan ribuan pasangan yang telah merencanakan pernikahan impian mereka bersama Loka Nikah.</p>
+            <h1 class="page-title">Daftar Akun Baru</h1>
+            <p class="page-subtitle">Bergabunglah dengan ribuan pasangan yang telah merencanakan pernikahan impian mereka bersama Loka Nikah.</p>
 
-            <div style="background: var(--light); padding: 2.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+            <div class="form-container">
                 <form id="registerForm">
                     <div class="form-group">
                         <label for="reg-name">Nama Lengkap *</label>
@@ -105,7 +105,7 @@
                 </form>
 
                 <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted);">
-                    Sudah punya akun? <a href="login.html" style="color: var(--primary); font-weight: 600;">Masuk di sini</a>
+                    Sudah punya akun? <a href="login.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Masuk di sini</a>
                 </p>
             </div>
 
@@ -216,47 +216,6 @@
 
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
-
-    <script>
-        const registerForm = document.getElementById('registerForm');
-
-        registerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            clearFormErrors('registerForm');
-
-            // Get form data
-            const formData = {
-                name: document.getElementById('reg-name').value,
-                email: document.getElementById('reg-email').value,
-                phone: document.getElementById('reg-phone').value,
-                password: document.getElementById('reg-password').value,
-                confirm: document.getElementById('reg-confirm').value
-            };
-
-            // Validate email format
-            if (!isValidEmail(formData.email)) {
-                showFormError('reg-email', 'Format email tidak valid');
-                return;
-            }
-
-            // Validate phone
-            if (!isValidPhone(formData.phone)) {
-                showFormError('reg-phone', 'Format nomor telepon tidak valid');
-                return;
-            }
-
-            // Register user
-            const result = lokaAuth.register(formData);
-
-            if (result.success) {
-                showAlert(result.message, 'success');
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 1500);
-            } else {
-                showAlert(result.message, 'error');
-            }
-        });
-    </script>
+    <script src="js/form-handlers.js"></script>
 </body>
 </html>

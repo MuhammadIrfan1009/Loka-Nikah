@@ -62,10 +62,10 @@
 
     <main>
         <div class="container-sm">
-            <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; text-align: center;">Masuk Ke Akun</h1>
-            <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Masuk untuk memantau progres hari besarmu dan mengelola booking pernikahan.</p>
+            <h1 class="page-title">Masuk Ke Akun</h1>
+            <p class="page-subtitle">Masuk untuk memantau progres hari besarmu dan mengelola booking pernikahan.</p>
 
-            <div style="background: var(--light); padding: 2.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); margin-bottom: 2rem;">
+            <div class="form-container">
                 <form id="loginForm">
                     <div class="form-group">
                         <label for="login-email">Email *</label>
@@ -89,17 +89,17 @@
                 </form>
 
                 <p style="text-align: center; margin-top: 1.5rem; color: var(--text-muted);">
-                    Belum punya akun? <a href="register.html" style="color: var(--primary); font-weight: 600;">Daftar di sini</a>
+                    Belum punya akun? <a href="register.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Daftar di sini</a>
                 </p>
             </div>
 
             <!-- Demo Account -->
-            <div style="background: var(--secondary); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary);">
-                <h4 style="color: var(--primary); margin-bottom: 0.5rem;"><i class="bi bi-lightbulb"></i> Demo Account</h4>
-                <p style="color: var(--dark); font-size: 0.9rem; margin-bottom: 0.5rem;">
+            <div class="info-box">
+                <h4><i class="bi bi-lightbulb"></i> Demo Account</h4>
+                <p>
                     Email: <strong>demo@lokanikah.com</strong>
                 </p>
-                <p style="color: var(--dark); font-size: 0.9rem;">
+                <p>
                     Password: <strong>demo123456</strong>
                 </p>
             </div>
@@ -184,58 +184,6 @@
 
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
-
-    <script>
-        const loginForm = document.getElementById('loginForm');
-
-        // Create demo account on load if doesn't exist
-        window.addEventListener('load', () => {
-            const demoUser = lokaAuth.users.find(u => u.email === 'demo@lokanikah.com');
-            if (!demoUser) {
-                lokaAuth.register({
-                    name: 'Demo User',
-                    email: 'demo@lokanikah.com',
-                    phone: '08123456789',
-                    password: 'demo123456',
-                    confirm: 'demo123456'
-                });
-            }
-        });
-
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            clearFormErrors('loginForm');
-
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            if (!email || !password) {
-                showAlert('Email dan password harus diisi!', 'error');
-                return;
-            }
-
-            const result = lokaAuth.login(email, password);
-
-            if (result.success) {
-                showAlert(result.message, 'success');
-                // Store remember me preference
-                if (document.getElementById('login-remember').checked) {
-                    localStorage.setItem('lokaRememberMe', 'true');
-                }
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
-            } else {
-                showAlert(result.message, 'error');
-            }
-        });
-
-        // Auto-fill demo credentials on demo button click
-        function fillDemoCredentials() {
-            document.getElementById('login-email').value = 'demo@lokanikah.com';
-            document.getElementById('login-password').value = 'demo123456';
-            document.getElementById('login-email').focus();
-        }
-    </script>
+    <script src="js/form-handlers.js"></script>
 </body>
 </html>
