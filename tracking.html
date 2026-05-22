@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOKA NIKAH - Tracking Progres</title>
+    <title>LOKA NIKAH - Progres Persiapan</title>
     <link rel="icon" type="image/png" href="assets/icons/situs.png">
     <link rel="apple-touch-icon" href="assets/icons/situs.png">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -322,7 +322,7 @@
                 </div>
                 <div id="userMenu" style="display:none;gap:1rem;">
                     <a href="booking.html">Booking</a>
-                    <a href="tracking.html" class="active">Tracking</a>
+                    <a href="tracking.html" class="active">Progres</a>
                     <a href="#" onclick="handleLogout(event)">Logout</a>
                     <span id="userNameDisplay"></span>
                 </div>
@@ -333,16 +333,16 @@
     <main>
         <div class="container">
             <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:var(--primary);margin-bottom:0.5rem;">Laporan Progres Persiapan</h1>
-            <p class="text-muted" style="margin-bottom:2rem;">Pantau, edit, atau batalkan booking pernikahan Anda dengan mudah.</p>
+            <p class="text-muted" style="margin-bottom:1rem;">Pantau, edit, atau batalkan booking pernikahan Anda dengan mudah.</p>
 
             <!-- Booking overview (selected booking) -->
-            <div id="overviewSection" style="display:none;margin-bottom:2rem;"></div>
+            <div id="overviewSection" style="display:none;margin-bottom:1rem;"></div>
 
             <!-- Booking List (injected by JS) -->
             <div id="bookingList"></div>
 
             <!-- Progress + Timeline (injected per selected booking) -->
-            <div id="progressSection" style="display:none;margin-bottom:2rem;">
+            <div id="progressSection" style="display:none;margin-bottom:1rem;">
                 <h3 style="color:var(--primary);font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:1rem;">Progress Keseluruhan</h3>
                 <div style="background:var(--bg-light);padding:1rem;border-radius:8px;margin-bottom:1rem;">
                     <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
@@ -355,7 +355,7 @@
                 </div>
             </div>
 
-            <div id="timelineSection" style="display:none;margin-bottom:2rem;">
+            <div id="timelineSection" style="display:none;margin-bottom:1rem;">
                 <div style="display:flex;flex-direction:column;gap:0.65rem;margin-bottom:1rem;">
                     <h3 style="color:var(--primary);font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:0;">Timeline Progres</h3>
                     <p style="margin:0;color:var(--text-muted);">Setiap tahap persiapan ditampilkan dengan status dan target tanggal. Pantau progres hingga hari pernikahan.</p>
@@ -364,7 +364,7 @@
             </div>
 
             <!-- Contact -->
-            <div id="contactSection" style="display:none;background:var(--secondary);padding:2rem;border-radius:12px;margin-top:3rem;text-align:center;">
+            <div id="contactSection" style="display:none;background:var(--secondary);padding:2rem;border-radius:12px;margin-top:1.5rem;text-align:center;">
                 <h3 style="color:var(--primary);font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:1rem;">Pertanyaan atau Kendala?</h3>
                 <p style="color:var(--dark);margin-bottom:1.5rem;">Hubungi tim customer service kami kapan saja untuk bantuan dan konsultasi.</p>
                 <div class="grid grid-2">
@@ -423,8 +423,48 @@
                 </div>
                 <div class="form-grid-2">
                     <div class="form-group">
-                        <label>Lokasi / Kota *</label>
-                        <input type="text" id="edit-location" placeholder="Kota atau tempat">
+                        <label>Pemilihan Lokasi *</label>
+                        <select id="edit-location">
+                            <option value="">-- Pilih Provinsi --</option>
+                            <option value="Aceh">Aceh</option>
+                            <option value="Sumatera Utara">Sumatera Utara</option>
+                            <option value="Sumatera Barat">Sumatera Barat</option>
+                            <option value="Riau">Riau</option>
+                            <option value="Kepulauan Riau">Kepulauan Riau</option>
+                            <option value="Jambi">Jambi</option>
+                            <option value="Bengkulu">Bengkulu</option>
+                            <option value="Sumatera Selatan">Sumatera Selatan</option>
+                            <option value="Kepulauan Bangka Belitung">Kepulauan Bangka Belitung</option>
+                            <option value="Lampung">Lampung</option>
+                            <option value="DKI Jakarta">DKI Jakarta</option>
+                            <option value="Jawa Barat">Jawa Barat</option>
+                            <option value="Banten">Banten</option>
+                            <option value="Jawa Tengah">Jawa Tengah</option>
+                            <option value="DI Yogyakarta">DI Yogyakarta</option>
+                            <option value="Jawa Timur">Jawa Timur</option>
+                            <option value="Bali">Bali</option>
+                            <option value="Nusa Tenggara Barat">Nusa Tenggara Barat</option>
+                            <option value="Nusa Tenggara Timur">Nusa Tenggara Timur</option>
+                            <option value="Kalimantan Barat">Kalimantan Barat</option>
+                            <option value="Kalimantan Tengah">Kalimantan Tengah</option>
+                            <option value="Kalimantan Selatan">Kalimantan Selatan</option>
+                            <option value="Kalimantan Timur">Kalimantan Timur</option>
+                            <option value="Kalimantan Utara">Kalimantan Utara</option>
+                            <option value="Sulawesi Utara">Sulawesi Utara</option>
+                            <option value="Gorontalo">Gorontalo</option>
+                            <option value="Sulawesi Tengah">Sulawesi Tengah</option>
+                            <option value="Sulawesi Barat">Sulawesi Barat</option>
+                            <option value="Sulawesi Selatan">Sulawesi Selatan</option>
+                            <option value="Sulawesi Tenggara">Sulawesi Tenggara</option>
+                            <option value="Maluku">Maluku</option>
+                            <option value="Maluku Utara">Maluku Utara</option>
+                            <option value="Papua Barat">Papua Barat</option>
+                            <option value="Papua Barat Daya">Papua Barat Daya</option>
+                            <option value="Papua">Papua</option>
+                            <option value="Papua Selatan">Papua Selatan</option>
+                            <option value="Papua Tengah">Papua Tengah</option>
+                            <option value="Papua Pegunungan">Papua Pegunungan</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Nama Venue</label>
@@ -496,7 +536,7 @@
                 <ul>
                     <li><a href="paket.html">Katalog Layanan</a></li>
                     <li><a href="booking.html">Booking Online</a></li>
-                    <li><a href="tracking.html">Tracking Progres</a></li>
+                    <li><a href="tracking.html">Progres</a></li>
                 </ul>
             </div>
             <div class="footer-section">

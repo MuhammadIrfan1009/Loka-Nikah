@@ -550,50 +550,6 @@ function initCardTilt() {
     });
 }
 
-// ==================== CURSOR GLOW EFFECT ==================== //
-
-function initCursorGlow() {
-    // Create glow element
-    const glow = document.createElement('div');
-    glow.id = 'cursor-glow';
-    glow.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 20px;
-        height: 20px;
-        background: radial-gradient(circle, rgba(140,94,88,0.3) 0%, rgba(140,94,88,0.1) 50%, transparent 70%);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9999;
-        transition: transform 0.1s ease-out;
-        opacity: 0;
-    `;
-    document.body.appendChild(glow);
-
-    let mouseX = 0, mouseY = 0;
-    let glowX = 0, glowY = 0;
-
-    function updateGlow() {
-        glowX += (mouseX - glowX) * 0.1;
-        glowY += (mouseY - glowY) * 0.1;
-
-        glow.style.transform = `translate(${glowX - 10}px, ${glowY - 10}px)`;
-        requestAnimationFrame(updateGlow);
-    }
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        glow.style.opacity = '1';
-    });
-
-    document.addEventListener('mouseleave', () => {
-        glow.style.opacity = '0';
-    });
-
-    updateGlow();
-}
 
 // ==================== SPARKLE EFFECTS ==================== //
 

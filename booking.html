@@ -19,6 +19,1010 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+        /* Modal & Dropdown Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-radius: 20px 20px 0 0;
+            max-width: 500px;
+            margin: 0 auto;
+            z-index: 1000;
+            animation: slideUp 0.3s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            position: sticky;
+            top: 0;
+            background: #fff;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Calendar Modal — compact centered card */
+        #datePickerModal .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            bottom: auto;
+            right: auto;
+            border-radius: 16px;
+            width: calc(100% - 2rem);
+            max-width: 360px;
+            max-height: 92vh;
+            animation: popIn 0.2s ease-out;
+        }
+
+        .calendar-picker {
+            padding: 1rem 1rem 0.5rem;
+        }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .calendar-nav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 1.1rem;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .calendar-nav-btn:hover {
+            background: rgba(140, 94, 88, 0.1);
+            border-radius: 50%;
+        }
+
+        .calendar-month-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+            margin-bottom: 0.4rem;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.3rem 0;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: #f5f0eb;
+            color: var(--dark);
+        }
+
+        .calendar-day.available:hover {
+            background: rgba(140, 94, 88, 0.15);
+        }
+
+        .calendar-day.selected {
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            box-shadow: 0 0 0 2px rgba(140, 94, 88, 0.3);
+        }
+
+        .calendar-day.booked {
+            background: #d9534f;
+            color: #fff;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.past {
+            background: #ececec;
+            color: #aaa;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .calendar-day.empty {
+            cursor: default;
+            background: transparent;
+        }
+
+        /* Calendar confirm area */
+        .calendar-confirm-area {
+            padding: 0.5rem 1rem 1rem;
+        }
+
+        .calendar-confirm-area .modal-confirm-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Calendar Legend */
+        .calendar-legend {
+            display: flex;
+            justify-content: center;
+            gap: 0.9rem;
+            padding: 0.5rem 1rem 0.6rem;
+            border-top: 1px solid #f0f0f0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-booked   { background: #d9534f; }
+        .legend-selected { background: var(--primary); }
+        .legend-available { background: #f5f0eb; border: 1.5px solid #ccc; }
+
+        /* Time Picker Modal — compact centered card */
+        #timePickerModal .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            bottom: auto;
+            right: auto;
+            border-radius: 16px;
+            width: calc(100% - 2rem);
+            max-width: 320px;
+            animation: popIn 0.2s ease-out;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+            to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .time-picker-modal {
+            padding: 1rem 1.25rem 1.25rem;
+        }
+
+        .time-picker-columns {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .time-picker-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .time-picker-col-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .time-colon {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            padding: 0 0.25rem;
+            padding-top: 1.2rem;
+            align-self: center;
+        }
+
+        .scroll-picker {
+            background: #faf9f7;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .scroll-picker-container {
+            height: 150px;
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: column;
+            padding: 50px 0;
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+        }
+
+        .scroll-picker-container::-webkit-scrollbar { display: none; }
+
+        .scroll-picker-item {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #bbb;
+            cursor: pointer;
+            scroll-snap-align: center;
+            transition: all 0.1s;
+            flex-shrink: 0;
+        }
+
+        .scroll-picker-item.active {
+            color: var(--primary);
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .scroll-picker-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            background: linear-gradient(180deg,
+                rgba(250,249,247,0.9) 0%,
+                transparent 25%,
+                transparent 75%,
+                rgba(250,249,247,0.9) 100%);
+            border-radius: 10px;
+        }
+
+        .scroll-picker-center {
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 50px;
+            transform: translateY(-50%);
+            border-top: 1.5px solid var(--primary);
+            border-bottom: 1.5px solid var(--primary);
+            pointer-events: none;
+            background: rgba(140, 94, 88, 0.04);
+        }
+
+        .time-period-badge {
+            text-align: center;
+            margin-top: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .time-period-badge span {
+            display: inline-block;
+            background: rgba(140,94,88,0.1);
+            color: var(--primary);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        /* Input Display */
+        .input-display {
+            padding: 1rem;
+            background: #faf9f7;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .input-display strong {
+            color: var(--primary);
+        }
+
+        /* Confirm Button */
+        .modal-confirm-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.2s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .modal-confirm-btn:hover {
+            background: #6b4940;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(140, 94, 88, 0.3);
+        }
+
+        .modal-confirm-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Input Field Click */
+        .input-field-clickable {
+            cursor: pointer !important;
+            background: #faf9f7 !important;
+            border: 2px solid #ddd !important;
+            transition: all 0.2s !important;
+        }
+
+        .input-field-clickable:hover {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(140, 94, 88, 0.1) !important;
+        }
+
+        .input-field-clickable:focus {
+            outline: none !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(140, 94, 88, 0.1) !important;
+        }
+
+        /* Info box for selected values */
+        .selected-info-box {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: #faf9f7;
+            border-left: 3px solid var(--primary);
+            border-radius: 4px;
+            color: var(--dark);
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .selected-info-box.show {
+            display: block;
+        }
+
+        .selected-info-box strong {
+            color: var(--primary);
+        }
+
+        /* Venue Autocomplete */
+        .venue-search-wrapper {
+            position: relative;
+            z-index: 100;
+        }
+
+        .venue-search-wrapper input[type="text"] {
+            padding-right: 2.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .venue-search-icon {
+            position: absolute;
+            right: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        .venue-search-spinner {
+            position: absolute;
+            right: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ddd;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+        /* Prevent form sections from clipping the venue dropdown */
+        #step2 {
+            overflow: visible !important;
+        }
+        .form-group:has(#venueWrapper) {
+            overflow: visible;
+            position: relative;
+            z-index: 50;
+        }
+
+
+        .venue-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1.5px solid #e0d8d3;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            z-index: 9999;
+            max-height: 240px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .venue-dropdown.open { display: block; }
+
+        .venue-option {
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #f5f0eb;
+            transition: background 0.15s;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+
+        .venue-option:last-child { border-bottom: none; }
+        .venue-option:hover, .venue-option.focused { background: #faf5f0; }
+
+        .venue-option-icon {
+            color: var(--primary);
+            font-size: 0.95rem;
+            margin-top: 0.15rem;
+            flex-shrink: 0;
+        }
+
+        .venue-option-text { flex: 1; }
+
+        .venue-option-name {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.1rem;
+        }
+
+        .venue-option-address {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        .venue-option-prov {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: rgba(140,94,88,0.1);
+            padding: 0.1rem 0.45rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 0.25rem;
+        }
+
+        /* Selected badge */
+        .venue-selected-badge {
+            display: none;
+            margin-top: 0.6rem;
+            padding: 0.65rem 0.9rem;
+            background: rgba(140,94,88,0.07);
+            border: 1.5px solid rgba(140,94,88,0.2);
+            border-radius: 8px;
+            gap: 0.6rem;
+            align-items: flex-start;
+        }
+
+        .venue-selected-badge.show {
+            display: flex;
+        }
+
+        .venue-selected-badge > i {
+            color: #2a7a3b;
+            font-size: 1rem;
+            margin-top: 0.15rem;
+            flex-shrink: 0;
+        }
+
+        .venue-badge-detail {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .venue-badge-name {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .venue-badge-addr {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        .venue-badge-prov {
+            display: inline-block;
+            margin-top: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: rgba(140,94,88,0.12);
+            padding: 0.1rem 0.5rem;
+            border-radius: 20px;
+            width: fit-content;
+        }
+
+        .venue-clear-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #bbb;
+            font-size: 1rem;
+            padding: 0;
+            line-height: 1;
+            transition: color 0.15s;
+            flex-shrink: 0;
+        }
+
+        .venue-clear-btn:hover { color: #d9534f; }
+
+        /* Fallback province selector */
+        .venue-province-fallback {
+            display: none;
+            margin-top: 0.6rem;
+            padding: 0.65rem 0.9rem;
+            background: #fff8e6;
+            border: 1.5px solid #f0c040;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            color: #7a5c00;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .venue-province-fallback.show { display: flex; }
+
+        .venue-province-fallback select {
+            margin-top: 0.4rem;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1.5px solid #e0d8d3;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            background: #fff;
+            color: var(--dark);
+            cursor: pointer;
+        }
+
+        .venue-no-result {
+            padding: 0.85rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .legend-booked   { background: #d9534f; }
+        .legend-selected { background: var(--primary); }
+        .legend-available { background: #f5f0eb; border: 1.5px solid #ccc; }
+
+        /* Time Picker Modal — compact centered card */
+        #timePickerModal .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            bottom: auto;
+            right: auto;
+            border-radius: 16px;
+            width: calc(100% - 2rem);
+            max-width: 320px;
+            animation: popIn 0.2s ease-out;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+            to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .time-picker-modal {
+            padding: 1rem 1.25rem 1.25rem;
+        }
+
+        .time-picker-columns {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .time-picker-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .time-picker-col-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .time-colon {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            padding: 0 0.25rem;
+            padding-top: 1.2rem;
+            align-self: center;
+        }
+
+        .scroll-picker {
+            background: #faf9f7;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .scroll-picker-container {
+            height: 150px;
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: column;
+            padding: 50px 0;
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+        }
+
+        .scroll-picker-container::-webkit-scrollbar { display: none; }
+
+        .scroll-picker-item {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #bbb;
+            cursor: pointer;
+            scroll-snap-align: center;
+            transition: all 0.1s;
+            flex-shrink: 0;
+        }
+
+        .scroll-picker-item.active {
+            color: var(--primary);
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .scroll-picker-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            background: linear-gradient(180deg,
+                rgba(250,249,247,0.9) 0%,
+                transparent 25%,
+                transparent 75%,
+                rgba(250,249,247,0.9) 100%);
+            border-radius: 10px;
+        }
+
+        .scroll-picker-center {
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 50px;
+            transform: translateY(-50%);
+            border-top: 1.5px solid var(--primary);
+            border-bottom: 1.5px solid var(--primary);
+            pointer-events: none;
+            background: rgba(140, 94, 88, 0.04);
+        }
+
+        .time-period-badge {
+            text-align: center;
+            margin-top: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .time-period-badge span {
+            display: inline-block;
+            background: rgba(140,94,88,0.1);
+            color: var(--primary);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        /* Input Display */
+        .input-display {
+            padding: 1rem;
+            background: #faf9f7;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .input-display strong {
+            color: var(--primary);
+        }
+
+        /* Confirm Button */
+        .modal-confirm-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.2s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .modal-confirm-btn:hover {
+            background: #6b4940;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(140, 94, 88, 0.3);
+        }
+
+        .modal-confirm-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Input Field Click */
+        .input-field-clickable {
+            cursor: pointer !important;
+            background: #faf9f7 !important;
+            border: 2px solid #ddd !important;
+            transition: all 0.2s !important;
+        }
+
+        .input-field-clickable:hover {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(140, 94, 88, 0.1) !important;
+        }
+
+        .input-field-clickable:focus {
+            outline: none !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(140, 94, 88, 0.1) !important;
+        }
+
+        /* Info box for selected values */
+        .selected-info-box {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: #faf9f7;
+            border-left: 3px solid var(--primary);
+            border-radius: 4px;
+            color: var(--dark);
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .selected-info-box.show {
+            display: block;
+        }
+
+        .selected-info-box strong {
+            color: var(--primary);
+        }
+
+        /* Venue Autocomplete */
+        .venue-search-wrapper {
+            position: relative;
+            z-index: 100;
+        }
+
+        .venue-search-wrapper input {
+            padding-right: 2.5rem;
+        }
+
+        .venue-search-icon {
+            position: absolute;
+            right: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        .venue-search-spinner {
+            position: absolute;
+            right: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ddd;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+        /* Prevent form sections from clipping the venue dropdown */
+        #step2 {
+            overflow: visible !important;
+        }
+        .form-group:has(#venueWrapper) {
+            overflow: visible;
+            position: relative;
+            z-index: 50;
+        }
+
+
+        .venue-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1.5px solid #e0d8d3;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            z-index: 9999;
+            max-height: 220px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .venue-dropdown.open { display: block; }
+
+        .venue-option {
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #f5f0eb;
+            transition: background 0.15s;
+        }
+
+        .venue-option:last-child { border-bottom: none; }
+
+        .venue-option:hover, .venue-option.focused {
+            background: #faf5f0;
+        }
+
+        .venue-option-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.15rem;
+        }
+
+        .venue-option-address {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        .venue-selected-badge {
+            display: none;
+            margin-top: 0.5rem;
+            padding: 0.5rem 0.85rem;
+            background: rgba(140,94,88,0.07);
+            border-left: 3px solid var(--primary);
+            border-radius: 4px;
+            font-size: 0.82rem;
+            color: var(--dark);
+        }
+
+        .venue-selected-badge.show { display: flex; gap: 0.5rem; align-items: flex-start; }
+
+        .venue-selected-badge i { color: var(--primary); margin-top: 0.1rem; flex-shrink: 0; }
+
+        .venue-no-result {
+            padding: 0.85rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -53,7 +1057,7 @@
                 </div>
                 <div id="userMenu" style="display: none; gap: 1rem;">
                     <a href="booking.html">Booking</a>
-                    <a href="tracking.html">Tracking</a>
+                    <a href="tracking.html">Progres</a>
                     <a href="#" onclick="handleLogout(event)">Logout</a>
                     <span id="userNameDisplay"></span>
                 </div>
@@ -101,86 +1105,135 @@
                     <div class="form-section" id="step2" style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--secondary);">
                         <h3 style="color: var(--primary); font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 1.5rem;">Rincian Acara</h3>
 
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="booking-date">Tanggal Pernikahan *</label>
-                                <input type="date" id="booking-date" name="date" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="booking-location">Lokasi Acara *</label>
-                                <input type="text" id="booking-location" name="location" placeholder="Kota/Tempat acara" required>
-                            </div>
+                        <!-- Date Picker -->
+                        <div class="form-group" style="margin-bottom: 2rem;">
+                            <label for="datePickerInput">Tanggal Pernikahan *</label>
+                            <input 
+                                type="text" 
+                                id="datePickerInput" 
+                                class="input-field-clickable"
+                                placeholder="Klik untuk pilih tanggal" 
+                                readonly
+                                style="padding: 0.75rem; border-radius: 8px; font-size: 0.95rem;"
+                            >
+                            <input type="hidden" id="booking-date" name="date" required>
+                            <p style="color:var(--text-muted); font-size:0.82rem; margin-top:0.5rem;"><i class="bi bi-info-circle"></i> Klik untuk memilih tanggal. Tanggal merah sudah dibooking orang lain.</p>
                         </div>
 
+                        <!-- Time Picker -->
+                        <div class="form-group" style="margin-bottom: 2rem;">
+                            <label for="timePickerInput">Jam Acara *</label>
+                            <input 
+                                type="text" 
+                                id="timePickerInput" 
+                                class="input-field-clickable"
+                                placeholder="Klik untuk pilih jam" 
+                                readonly
+                                style="padding: 0.75rem; border-radius: 8px; font-size: 0.95rem;"
+                            >
+                            <input type="hidden" id="booking-time" name="time" required>
+                            <p style="color:var(--text-muted); font-size:0.82rem; margin-top:0.5rem;"><i class="bi bi-info-circle"></i> Klik untuk memilih jam acara.</p>
+                        </div>
+
+                        <!-- Venue + Location unified search -->
                         <div class="form-group">
-                            <label for="booking-venue">Nama Venue/Tempat (Opsional)</label>
-                            <input type="text" id="booking-venue" name="venue" placeholder="Nama hotel, gedung, atau venue">
+                            <label for="venueSearch">Venue / Lokasi Acara *</label>
+                            <div class="venue-search-wrapper" id="venueWrapper">
+                                <input
+                                    type="text"
+                                    id="venueSearch"
+                                    autocomplete="off"
+                                    placeholder="Ketik nama hotel, gedung, atau alamat venue..."
+                                >
+                                <i class="bi bi-geo-alt venue-search-icon" id="venueIcon"></i>
+                                <div class="venue-search-spinner" id="venueSpinner"></div>
+                                <div class="venue-dropdown" id="venueDropdown"></div>
+                            </div>
+                            <!-- hidden fields consumed by form submission -->
+                            <input type="hidden" id="booking-venue"    name="venue">
+                            <input type="hidden" id="booking-location" name="location" required>
+
+                            <!-- Result badge -->
+                            <div class="venue-selected-badge" id="venueSelectedBadge">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <div class="venue-badge-detail">
+                                    <span class="venue-badge-name"  id="venueSelectedName"></span>
+                                    <span class="venue-badge-addr"  id="venueSelectedAddr"></span>
+                                    <span class="venue-badge-prov"  id="venueSelectedProv"></span>
+                                </div>
+                                <button type="button" class="venue-clear-btn" id="venueClearBtn" title="Hapus pilihan">
+                                    <i class="bi bi-x"></i>
+                                </button>
+                            </div>
+
+                            <!-- Fallback province selector — only shown when auto-detect fails -->
+                            <div class="venue-province-fallback" id="venueFallback">
+                                <i class="bi bi-exclamation-circle"></i>
+                                Provinsi tidak terdeteksi otomatis. Pilih manual:
+                                <select id="venueFallbackSelect">
+                                    <option value="">-- Pilih Provinsi --</option>
+                                    <option>Aceh</option><option>Sumatera Utara</option>
+                                    <option>Sumatera Barat</option><option>Riau</option>
+                                    <option>Kepulauan Riau</option><option>Jambi</option>
+                                    <option>Bengkulu</option><option>Sumatera Selatan</option>
+                                    <option>Kepulauan Bangka Belitung</option><option>Lampung</option>
+                                    <option>DKI Jakarta</option><option>Jawa Barat</option>
+                                    <option>Banten</option><option>Jawa Tengah</option>
+                                    <option>DI Yogyakarta</option><option>Jawa Timur</option>
+                                    <option>Bali</option><option>Nusa Tenggara Barat</option>
+                                    <option>Nusa Tenggara Timur</option><option>Kalimantan Barat</option>
+                                    <option>Kalimantan Tengah</option><option>Kalimantan Selatan</option>
+                                    <option>Kalimantan Timur</option><option>Kalimantan Utara</option>
+                                    <option>Sulawesi Utara</option><option>Gorontalo</option>
+                                    <option>Sulawesi Tengah</option><option>Sulawesi Barat</option>
+                                    <option>Sulawesi Selatan</option><option>Sulawesi Tenggara</option>
+                                    <option>Maluku</option><option>Maluku Utara</option>
+                                    <option>Papua Barat</option><option>Papua Barat Daya</option>
+                                    <option>Papua</option><option>Papua Selatan</option>
+                                    <option>Papua Tengah</option><option>Papua Pegunungan</option>
+                                </select>
+                            </div>
+                            <p style="color:var(--text-muted); font-size:0.82rem; margin-top:0.5rem;">
+                                <i class="bi bi-info-circle"></i> Ketik minimal 3 karakter untuk mencari. Provinsi akan terdeteksi otomatis.
+                            </p>
                         </div>
 
                         <div class="form-group">
                             <label for="booking-guests">Jumlah Tamu (estimasi) *</label>
                             <input type="number" id="booking-guests" name="guests" min="50" placeholder="Minimal 50 orang" required>
                         </div>
-
-                        <div class="form-group">
-                            <label for="booking-time">Jam Acara *</label>
-                            <input type="time" id="booking-time" name="time" required>
-                        </div>
                     </div>
 
                     <!-- Step 3: Packages -->
                     <div class="form-section" id="step3" style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--secondary);">
                         <h3 style="color: var(--primary); font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-bottom: 1.5rem;">Paket yang Diinginkan</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Pilih satu atau lebih layanan yang Anda inginkan:</p>
 
-                        <div class="form-group">
-                            <label for="booking-package">Pilih Paket Utama *</label>
-                            <select id="booking-package" name="package" required>
-                                <option value="">-- Pilih Paket --</option>
-                                <option value="catering">Catering Eksklusif</option>
-                                <option value="makeup">MUA by Loka Team - Soft Glam</option>
-                                <option value="fotografi">Fotografer Premium</option>
-                                <option value="dekorasi">Dekorasi Minimalis</option>
-                                <option value="entertainment">Entertainment & MC Profesional</option>
-                                <option value="undangan">Undangan Desain Custom</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label style="display: flex; align-items: center;">
-                                <input type="checkbox" id="booking-multiple" name="multiple" style="margin-right: 0.5rem;">
-                                <span>Saya ingin pesan lebih dari satu paket (bundle multi-layanan)</span>
-                            </label>
-                            <p id="multiPackageNote" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
-                                Centang jika Anda ingin memilih setidaknya 2 layanan sekaligus. Estimasi harga akan ditampilkan berdasarkan semua paket yang dipilih.
-                            </p>
-                        </div>
-
-                        <div id="additionalPackages" style="display: none; margin-top: 1rem;">
-                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Pilih minimal 2 paket tambahan untuk paket bundle:</p>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
-                                <label style="display: flex; align-items: center;">
-                                    <input type="checkbox" name="packages" value="catering">
-                                    <span style="margin-left: 0.5rem;">Catering</span>
+                        <div id="additionalPackages" style="margin-top: 0.5rem;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" name="packages" value="catering" id="pkg-catering">
+                                    <span>Catering Eksklusif</span>
                                 </label>
-                                <label style="display: flex; align-items: center;">
-                                    <input type="checkbox" name="packages" value="makeup">
-                                    <span style="margin-left: 0.5rem;">Makeup Artist</span>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" name="packages" value="makeup" id="pkg-makeup">
+                                    <span>MUA by Loka Team</span>
                                 </label>
-                                <label style="display: flex; align-items: center;">
-                                    <input type="checkbox" name="packages" value="fotografi">
-                                    <span style="margin-left: 0.5rem;">Fotografer</span>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" name="packages" value="fotografi" id="pkg-fotografi">
+                                    <span>Fotografer Premium</span>
                                 </label>
-                                <label style="display: flex; align-items: center;">
-                                    <input type="checkbox" name="packages" value="dekorasi">
-                                    <span style="margin-left: 0.5rem;">Dekorasi</span>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" name="packages" value="dekorasi" id="pkg-dekorasi">
+                                    <span>Dekorasi Minimalis</span>
                                 </label>
-                                <label style="display: flex; align-items: center;">
-                                    <input type="checkbox" name="packages" value="entertainment">
-                                    <span style="margin-left: 0.5rem;">Entertainment</span>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" name="packages" value="entertainment" id="pkg-entertainment">
+                                    <span>Entertainment & MC</span>
                                 </label>
-                                <label style="display: flex; align-items: center;">
-                                    <input type="checkbox" name="packages" value="undangan">
-                                    <span style="margin-left: 0.5rem;">Undangan</span>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" name="packages" value="undangan" id="pkg-undangan">
+                                    <span>Undangan Desain Custom</span>
                                 </label>
                             </div>
                         </div>
@@ -298,7 +1351,7 @@
                 <ul>
                     <li><a href="paket.html">Katalog Layanan</a></li>
                     <li><a href="booking.html">Booking Online</a></li>
-                    <li><a href="tracking.html">Tracking Progres</a></li>
+                    <li><a href="tracking.html">Progres</a></li>
                 </ul>
             </div>
 
@@ -358,6 +1411,69 @@
             Merapikan mimpi, mewujudkan janji.
         </p>
     </footer>
+
+    <!-- Date Picker Modal -->
+    <div id="datePickerModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Pilih Tanggal</h2>
+                <button type="button" class="modal-close-btn" onclick="closeDatePicker()">×</button>
+            </div>
+            <div class="calendar-picker" id="calendarPicker"></div>
+            <div class="calendar-legend">
+                <div class="legend-item">
+                    <span class="legend-dot legend-booked"></span>
+                    <span>Sudah dibooking</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot legend-selected"></span>
+                    <span>Dipilih</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot legend-available"></span>
+                    <span>Tersedia</span>
+                </div>
+            </div>
+            <div class="calendar-confirm-area" id="calendarConfirmArea">
+                <button type="button" class="modal-confirm-btn" onclick="confirmDate()" id="calendarConfirmBtn" disabled>
+                    Konfirmasi Tanggal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Time Picker Modal -->
+    <div id="timePickerModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Pilih Jam</h2>
+                <button type="button" class="modal-close-btn" onclick="closeTimePicker()">×</button>
+            </div>
+            <div class="time-picker-modal">
+                <div class="time-picker-columns">
+                    <div class="time-picker-col">
+                        <span class="time-picker-col-label">Jam</span>
+                        <div class="scroll-picker">
+                            <div class="scroll-picker-container" id="hourScroller"></div>
+                            <div class="scroll-picker-overlay"></div>
+                            <div class="scroll-picker-center"></div>
+                        </div>
+                    </div>
+                    <div class="time-colon">:</div>
+                    <div class="time-picker-col">
+                        <span class="time-picker-col-label">Menit</span>
+                        <div class="scroll-picker">
+                            <div class="scroll-picker-container" id="minuteScroller"></div>
+                            <div class="scroll-picker-overlay"></div>
+                            <div class="scroll-picker-center"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="time-period-badge" id="timePeriodBadge"><span id="timePeriod">09.00 Pagi</span></div>
+                <button type="button" class="modal-confirm-btn" onclick="confirmTime()">Konfirmasi</button>
+            </div>
+        </div>
+    </div>
 
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
@@ -419,14 +1535,302 @@
             }
 
             // Initialize price display
-            const packageId = document.getElementById('booking-package').value;
-            if (packageId && vendorDatabase[packageId]) {
-                const pkg = vendorDatabase[packageId];
-                document.getElementById('selectedPackageLabel').textContent = pkg.title;
-                document.getElementById('selectedPrice').textContent = pkg.price;
-            }
+            updatePriceDisplay();
+
+            // Initialize date & time pickers
+            initDatePicker();
+            initTimePicker();
         });
 
+        // ========== DATE PICKER ==========
+        function initDatePicker() {
+            const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+            let calYear = new Date().getFullYear();
+            let calMonth = new Date().getMonth();
+
+            function pad(n) { return String(n).padStart(2, '0'); }
+
+            function getBookedDates() {
+                const bookings = JSON.parse(localStorage.getItem('lokaBookings') || '[]');
+                return bookings
+                    .filter(b => b.status !== 'cancelled')
+                    .map(b => b.date);
+            }
+
+            function renderCalendar() {
+                const bookedDates = getBookedDates();
+                const selectedDate = document.getElementById('booking-date').value;
+                const container = document.getElementById('calendarPicker');
+                const today = new Date();
+
+                let html = `
+                    <div class="calendar-header">
+                        <button type="button" class="calendar-nav-btn" onclick="prevMonth()">❮</button>
+                        <span class="calendar-month-label">${monthNames[calMonth]} ${calYear}</span>
+                        <button type="button" class="calendar-nav-btn" onclick="nextMonth()">❯</button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <div class="calendar-weekday">Min</div>
+                        <div class="calendar-weekday">Sen</div>
+                        <div class="calendar-weekday">Sel</div>
+                        <div class="calendar-weekday">Rab</div>
+                        <div class="calendar-weekday">Kam</div>
+                        <div class="calendar-weekday">Jum</div>
+                        <div class="calendar-weekday">Sab</div>
+                    </div>
+                    <div class="calendar-days">
+                `;
+
+                const firstDay = new Date(calYear, calMonth, 1).getDay();
+                const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+                for (let i = 0; i < firstDay; i++) {
+                    html += '<div class="calendar-day empty"></div>';
+                }
+
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const dateStr = `${calYear}-${pad(calMonth + 1)}-${pad(d)}`;
+                    const isBooked = bookedDates.includes(dateStr);
+                    const isSelected = selectedDate === dateStr;
+                    const isPast = new Date(calYear, calMonth, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+                    let className = 'calendar-day';
+                    if (isPast) className += ' past';
+                    else if (isBooked && !isSelected) className += ' booked';
+                    else if (isSelected) className += ' selected';
+                    else className += ' available';
+
+                    const clickable = !isPast && !isBooked ? `onclick="selectDate('${dateStr}', this)"` : '';
+                    html += `<div class="${className}" ${clickable}>${d}</div>`;
+                }
+
+                html += '</div>';
+                container.innerHTML = html;
+            }
+
+            window.prevMonth = function() {
+                calMonth--;
+                if (calMonth < 0) {
+                    calMonth = 11;
+                    calYear--;
+                }
+                renderCalendar();
+            };
+
+            window.nextMonth = function() {
+                calMonth++;
+                if (calMonth > 11) {
+                    calMonth = 0;
+                    calYear++;
+                }
+                renderCalendar();
+            };
+
+            let pendingDate = document.getElementById('booking-date').value || null;
+
+            window.selectDate = function(dateStr) {
+                pendingDate = dateStr;
+                const btn = document.getElementById('calendarConfirmBtn');
+                if (btn) btn.disabled = false;
+                renderCalendar();
+            };
+
+            window.confirmDate = function() {
+                if (!pendingDate) return;
+                const dateObj = new Date(pendingDate);
+                const formatted = dateObj.toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                document.getElementById('booking-date').value = pendingDate;
+                document.getElementById('datePickerInput').value = formatted;
+                closeDatePicker();
+            };
+
+            // patch renderCalendar to use pendingDate for highlight
+            const _origRender = renderCalendar;
+            renderCalendar = function() {
+                const bookedDates = getBookedDates();
+                const container = document.getElementById('calendarPicker');
+                const today = new Date();
+
+                let html = `
+                    <div class="calendar-header">
+                        <button type="button" class="calendar-nav-btn" onclick="prevMonth()">❮</button>
+                        <span class="calendar-month-label">${monthNames[calMonth]} ${calYear}</span>
+                        <button type="button" class="calendar-nav-btn" onclick="nextMonth()">❯</button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <div class="calendar-weekday">Min</div>
+                        <div class="calendar-weekday">Sen</div>
+                        <div class="calendar-weekday">Sel</div>
+                        <div class="calendar-weekday">Rab</div>
+                        <div class="calendar-weekday">Kam</div>
+                        <div class="calendar-weekday">Jum</div>
+                        <div class="calendar-weekday">Sab</div>
+                    </div>
+                    <div class="calendar-days">
+                `;
+
+                const firstDay = new Date(calYear, calMonth, 1).getDay();
+                const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+                const pad2 = n => String(n).padStart(2, '0');
+
+                for (let i = 0; i < firstDay; i++) {
+                    html += '<div class="calendar-day empty"></div>';
+                }
+
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const dateStr = `${calYear}-${pad2(calMonth + 1)}-${pad2(d)}`;
+                    const isBooked   = bookedDates.includes(dateStr);
+                    const isPending  = pendingDate === dateStr;
+                    const isPast     = new Date(calYear, calMonth, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+                    let cls = 'calendar-day';
+                    if (isPast)              cls += ' past';
+                    else if (isBooked)       cls += ' booked';
+                    else if (isPending)      cls += ' selected';
+                    else                     cls += ' available';
+
+                    const click = (!isPast && !isBooked) ? `onclick="selectDate('${dateStr}')"` : '';
+                    html += `<div class="${cls}" ${click}>${d}</div>`;
+                }
+
+                html += '</div>';
+                container.innerHTML = html;
+            };
+
+            renderCalendar();
+        }
+
+        document.getElementById('datePickerInput').addEventListener('click', openDatePicker);
+
+        function openDatePicker() {
+            document.getElementById('datePickerModal').classList.add('active');
+        }
+
+        function closeDatePicker() {
+            document.getElementById('datePickerModal').classList.remove('active');
+        }
+
+        document.getElementById('datePickerModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDatePicker();
+        });
+
+        // ========== TIME PICKER ==========
+        function initTimePicker() {
+            const ITEM_H = 50; // must match CSS scroll-picker-item height
+            let selectedHour   = 9;
+            let selectedMinute = 0;
+
+            const pad = n => String(n).padStart(2, '0');
+
+            function getPeriod(h) {
+                return h < 12 ? 'Pagi' : h < 17 ? 'Siang' : h < 19 ? 'Sore' : 'Malam';
+            }
+
+            function updatePreview() {
+                const period = getPeriod(selectedHour);
+                document.getElementById('timePeriod').textContent =
+                    `${pad(selectedHour)}.${pad(selectedMinute)} ${period}`;
+            }
+
+            function highlightActive(container, activeIdx) {
+                container.querySelectorAll('.scroll-picker-item').forEach((el, i) => {
+                    el.classList.toggle('active', i === activeIdx);
+                });
+            }
+
+            function scrollToIndex(container, idx, instant) {
+                container.scrollTo({
+                    top: idx * ITEM_H,
+                    behavior: instant ? 'instant' : 'smooth'
+                });
+            }
+
+            function attachScrollDetect(container, onSelect) {
+                let scrollTimer;
+                const detect = () => {
+                    const idx = Math.round(container.scrollTop / ITEM_H);
+                    onSelect(idx);
+                    highlightActive(container, idx);
+                };
+                // scrollend = fires once scroll fully settles (modern browsers)
+                container.addEventListener('scrollend', detect);
+                // Fallback: debounced scroll for older browsers
+                container.addEventListener('scroll', () => {
+                    clearTimeout(scrollTimer);
+                    scrollTimer = setTimeout(detect, 120);
+                });
+            }
+
+            function buildPicker(container, count, getSelected) {
+                container.innerHTML = '';
+                for (let i = 0; i < count; i++) {
+                    const item = document.createElement('div');
+                    item.className = `scroll-picker-item${i === getSelected() ? ' active' : ''}`;
+                    item.textContent = pad(i);
+                    // tap/click still works as shortcut
+                    item.addEventListener('click', () => {
+                        scrollToIndex(container, i, false);
+                    });
+                    container.appendChild(item);
+                }
+            }
+
+            function initPickers() {
+                const hourC   = document.getElementById('hourScroller');
+                const minuteC = document.getElementById('minuteScroller');
+
+                buildPicker(hourC,   24, () => selectedHour);
+                buildPicker(minuteC, 60, () => selectedMinute);
+
+                // Scroll to current value instantly on open
+                scrollToIndex(hourC,   selectedHour,   true);
+                scrollToIndex(minuteC, selectedMinute, true);
+
+                attachScrollDetect(hourC, idx => {
+                    selectedHour = Math.min(Math.max(idx, 0), 23);
+                    updatePreview();
+                });
+                attachScrollDetect(minuteC, idx => {
+                    selectedMinute = Math.min(Math.max(idx, 0), 59);
+                    updatePreview();
+                });
+
+                updatePreview();
+            }
+
+            window.openTimePicker = function() {
+                document.getElementById('timePickerModal').classList.add('active');
+                // Re-init so scroll position is restored to current selection
+                initPickers();
+            };
+
+            window.confirmTime = function() {
+                const timeStr = `${pad(selectedHour)}:${pad(selectedMinute)}`;
+                const period  = getPeriod(selectedHour);
+                document.getElementById('booking-time').value      = timeStr;
+                document.getElementById('timePickerInput').value   = `${timeStr} — ${period}`;
+                closeTimePicker();
+            };
+
+            initPickers();
+        }
+
+        document.getElementById('timePickerInput').addEventListener('click', () => window.openTimePicker());
+
+        function closeTimePicker() {
+            document.getElementById('timePickerModal').classList.remove('active');
+        }
+
+        document.getElementById('timePickerModal').addEventListener('click', function(e) {
+            if (e.target === this) closeTimePicker();
+        });
+
+        // ========== PRICE CALCULATION ==========
         function formatCurrency(value) {
             return new Intl.NumberFormat('id-ID', {
                 style: 'currency',
@@ -436,12 +1840,6 @@
         }
 
         function getSelectedPackageIds() {
-            const isMulti = document.getElementById('booking-multiple').checked;
-            if (!isMulti) {
-                const selected = document.getElementById('booking-package').value;
-                return selected ? [selected] : [];
-            }
-
             return Array.from(document.querySelectorAll('#additionalPackages input[name="packages"]:checked')).map(el => el.value);
         }
 
@@ -477,7 +1875,7 @@
             if (!packageIds.length) {
                 selectedLabel.textContent = 'Belum dipilih';
                 selectedPrice.textContent = '—';
-                breakdownEl.textContent = 'Pilih paket utama atau aktifkan pilihan multi-paket untuk melihat estimasi harga.';
+                breakdownEl.textContent = 'Pilih paket untuk melihat estimasi harga.';
                 budgetStatusEl.textContent = 'Masukkan budget untuk melihat apakah dana Anda sudah sesuai estimasi.';
                 return;
             }
@@ -488,7 +1886,7 @@
                     selectedLabel.textContent = 'Belum dipilih';
                     selectedPrice.textContent = '—';
                     breakdownEl.textContent = 'Pilih paket untuk melihat estimasi harga.';
-                    budgetStatusEl.textContent = 'Masukkan budget untuk melihat apakah dana Anda sudah sesuai estimasi.';
+                    budgetStatusEl.textContent = '';
                     return;
                 }
 
@@ -555,38 +1953,21 @@
             }
         }
 
-        function updatePackageSelectionMode() {
-            const isMulti = document.getElementById('booking-multiple').checked;
-            document.getElementById('additionalPackages').style.display = isMulti ? 'block' : 'none';
-            document.getElementById('booking-package').disabled = isMulti;
-
-            if (!isMulti) {
-                document.querySelectorAll('#additionalPackages input[name="packages"]').forEach(el => el.checked = false);
-            }
-
-            updatePriceDisplay();
-        }
-
-        document.getElementById('booking-multiple').addEventListener('change', updatePackageSelectionMode);
-        document.getElementById('booking-package').addEventListener('change', updatePriceDisplay);
         document.getElementById('booking-budget').addEventListener('input', updatePriceDisplay);
         document.getElementById('booking-guests').addEventListener('input', updatePriceDisplay);
         document.querySelectorAll('#additionalPackages input[name="packages"]').forEach(el => el.addEventListener('change', updatePriceDisplay));
 
-        updatePackageSelectionMode();
-
-        // Handle form submission
+        // ========== FORM SUBMISSION ==========
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             clearFormErrors('bookingForm');
 
             const selectedPackages = getSelectedPackageIds();
-            if (document.getElementById('booking-multiple').checked && selectedPackages.length < 2) {
-                showAlert('Pilih minimal 2 paket untuk paket bundle.', 'error');
+            if (selectedPackages.length < 1) {
+                showAlert('Pilih minimal satu paket layanan.', 'error');
                 return;
             }
 
-            // Get form data
             const formData = {
                 names: document.getElementById('booking-name').value,
                 partner: document.getElementById('booking-partner').value,
@@ -601,13 +1982,11 @@
                 notes: document.getElementById('booking-notes').value
             };
 
-            // Validate
             if (!formData.names || !formData.partner || !formData.date || !formData.location || !formData.guests || !formData.packages.length || !formData.time) {
                 showAlert('Semua field yang diperlukan harus diisi!', 'error');
                 return;
             }
 
-            // Create booking
             const result = lokaAuth.createBooking(formData);
 
             if (result.success) {
@@ -617,10 +1996,8 @@
                 </div>`;
                 
                 showAlert(result.message, 'success');
-                
-                // Clear form
                 document.getElementById('bookingForm').reset();
-                updatePackageSelectionMode();
+                updatePriceDisplay();
                 
                 setTimeout(() => {
                     window.location.href = 'tracking.html';
@@ -629,6 +2006,236 @@
                 showAlert(result.message, 'error');
             }
         });
+
+
+        // ========== VENUE AUTOCOMPLETE (unified search + auto-province) ==========
+        (function() {
+            const searchInput  = document.getElementById('venueSearch');
+            const dropdown     = document.getElementById('venueDropdown');
+            const spinner      = document.getElementById('venueSpinner');
+            const icon         = document.getElementById('venueIcon');
+            const hiddenVenue  = document.getElementById('booking-venue');
+            const hiddenLoc    = document.getElementById('booking-location');
+            const badge        = document.getElementById('venueSelectedBadge');
+            const badgeName    = document.getElementById('venueSelectedName');
+            const badgeAddr    = document.getElementById('venueSelectedAddr');
+            const badgeProv    = document.getElementById('venueSelectedProv');
+            const clearBtn     = document.getElementById('venueClearBtn');
+            const fallback     = document.getElementById('venueFallback');
+            const fallbackSel  = document.getElementById('venueFallbackSelect');
+
+            let debounceTimer  = null;
+            let focusedIndex   = -1;
+            let currentResults = [];
+
+            // Nominatim state → form province mapping
+            const PROV_MAP = {
+                'daerah istimewa yogyakarta': 'DI Yogyakarta',
+                'yogyakarta':                 'DI Yogyakarta',
+                'dki jakarta':                'DKI Jakarta',
+                'jakarta':                    'DKI Jakarta',
+                'daerah khusus ibukota jakarta': 'DKI Jakarta',
+                'kepri':                      'Kepulauan Riau',
+                'bangka belitung':            'Kepulauan Bangka Belitung',
+                'kepulauan bangka-belitung':  'Kepulauan Bangka Belitung',
+                'ntt':                        'Nusa Tenggara Timur',
+                'ntb':                        'Nusa Tenggara Barat',
+                'kaltim':                     'Kalimantan Timur',
+                'kalsel':                     'Kalimantan Selatan',
+                'kalteng':                    'Kalimantan Tengah',
+                'kalbar':                     'Kalimantan Barat',
+                'sulsel':                     'Sulawesi Selatan',
+                'sulteng':                    'Sulawesi Tengah',
+                'sultra':                     'Sulawesi Tenggara',
+                'sulbar':                     'Sulawesi Barat',
+                'sulut':                      'Sulawesi Utara',
+                'malut':                      'Maluku Utara',
+                'papua barat daya':           'Papua Barat Daya',
+            };
+
+            const PROVINCES = [
+                'Aceh','Sumatera Utara','Sumatera Barat','Riau','Kepulauan Riau',
+                'Jambi','Bengkulu','Sumatera Selatan','Kepulauan Bangka Belitung','Lampung',
+                'DKI Jakarta','Jawa Barat','Banten','Jawa Tengah','DI Yogyakarta','Jawa Timur',
+                'Bali','Nusa Tenggara Barat','Nusa Tenggara Timur','Kalimantan Barat',
+                'Kalimantan Tengah','Kalimantan Selatan','Kalimantan Timur','Kalimantan Utara',
+                'Sulawesi Utara','Gorontalo','Sulawesi Tengah','Sulawesi Barat','Sulawesi Selatan',
+                'Sulawesi Tenggara','Maluku','Maluku Utara','Papua Barat','Papua Barat Daya',
+                'Papua','Papua Selatan','Papua Tengah','Papua Pegunungan'
+            ];
+
+            function detectProvince(addr) {
+                if (!addr) return null;
+                const state = (addr.state || '').trim();
+                const lower = state.toLowerCase();
+                // direct map
+                if (PROV_MAP[lower]) return PROV_MAP[lower];
+                // exact match in list
+                const exact = PROVINCES.find(p => p.toLowerCase() === lower);
+                if (exact) return exact;
+                // fuzzy: starts with
+                const fuzzy = PROVINCES.find(p => lower.startsWith(p.toLowerCase()) || p.toLowerCase().startsWith(lower));
+                return fuzzy || null;
+            }
+
+            function showSpinner(show) {
+                spinner.style.display = show ? 'block' : 'none';
+                icon.style.display    = show ? 'none'  : 'block';
+            }
+
+            async function searchPlaces(query) {
+                const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=6&addressdetails=1&countrycodes=id&accept-language=id`;
+                const res = await fetch(url, { headers: { 'Accept-Language': 'id' } });
+                return res.json();
+            }
+
+            function buildAddressLine(addrObj) {
+                const parts = [
+                    addrObj.road || addrObj.pedestrian,
+                    addrObj.suburb || addrObj.neighbourhood,
+                    addrObj.city || addrObj.town || addrObj.village || addrObj.county,
+                ].filter(Boolean);
+                return parts.join(', ');
+            }
+
+            function renderDropdown(results) {
+                dropdown.innerHTML = '';
+                focusedIndex = -1;
+                currentResults = results;
+
+                if (!results.length) {
+                    dropdown.innerHTML = '<div class="venue-no-result"><i class="bi bi-search"></i> Tempat tidak ditemukan. Coba kata kunci lain.</div>';
+                    dropdown.classList.add('open');
+                    return;
+                }
+
+                results.forEach((place, i) => {
+                    const addr  = place.address || {};
+                    const name  = place.name || place.display_name.split(',')[0];
+                    const addrLine = buildAddressLine(addr);
+                    const prov  = detectProvince(addr);
+
+                    const el = document.createElement('div');
+                    el.className = 'venue-option';
+                    el.innerHTML = `
+                        <i class="bi bi-geo-alt venue-option-icon"></i>
+                        <div class="venue-option-text">
+                            <div class="venue-option-name">${name}</div>
+                            ${addrLine ? `<div class="venue-option-address">${addrLine}</div>` : ''}
+                            ${prov ? `<span class="venue-option-prov">${prov}</span>` : ''}
+                        </div>`;
+                    el.addEventListener('mousedown', (e) => { e.preventDefault(); selectPlace(place); });
+                    dropdown.appendChild(el);
+                });
+
+                dropdown.classList.add('open');
+            }
+
+            function selectPlace(place) {
+                const addr    = place.address || {};
+                const name    = place.name || place.display_name.split(',')[0];
+                const addrLine = buildAddressLine(addr);
+                const prov    = detectProvince(addr);
+
+                // Fill hidden inputs
+                hiddenVenue.value = name + (addrLine ? ', ' + addrLine : '');
+                hiddenLoc.value   = prov || '';
+
+                // Fill search input with just the name
+                searchInput.value = name;
+
+                // Show badge
+                badgeName.textContent = name;
+                badgeAddr.textContent = addrLine;
+                badgeProv.textContent = prov || '';
+                badge.classList.add('show');
+
+                // Show/hide province fallback
+                if (prov) {
+                    fallback.classList.remove('show');
+                } else {
+                    fallback.classList.add('show');
+                    fallbackSel.value = '';
+                }
+
+                closeDropdown();
+            }
+
+            function clearVenue() {
+                searchInput.value   = '';
+                hiddenVenue.value   = '';
+                hiddenLoc.value     = '';
+                badge.classList.remove('show');
+                fallback.classList.remove('show');
+                fallbackSel.value = '';
+                searchInput.focus();
+            }
+
+            function closeDropdown() {
+                dropdown.classList.remove('open');
+                focusedIndex = -1;
+                currentResults = [];
+            }
+
+            // Fallback province selection
+            fallbackSel.addEventListener('change', () => {
+                hiddenLoc.value = fallbackSel.value;
+                if (fallbackSel.value) {
+                    badgeProv.textContent = fallbackSel.value;
+                    fallback.classList.remove('show');
+                }
+            });
+
+            clearBtn.addEventListener('click', clearVenue);
+
+            searchInput.addEventListener('input', () => {
+                const q = searchInput.value.trim();
+                badge.classList.remove('show');
+                fallback.classList.remove('show');
+                hiddenVenue.value = '';
+                hiddenLoc.value   = '';
+
+                clearTimeout(debounceTimer);
+                if (q.length < 3) { closeDropdown(); return; }
+
+                debounceTimer = setTimeout(async () => {
+                    showSpinner(true);
+                    try {
+                        const results = await searchPlaces(q);
+                        renderDropdown(results);
+                    } catch(e) {
+                        dropdown.innerHTML = '<div class="venue-no-result"><i class="bi bi-wifi-off"></i> Gagal memuat. Periksa koneksi.</div>';
+                        dropdown.classList.add('open');
+                    } finally {
+                        showSpinner(false);
+                    }
+                }, 400);
+            });
+
+            // Keyboard navigation
+            searchInput.addEventListener('keydown', (e) => {
+                const items = dropdown.querySelectorAll('.venue-option');
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    focusedIndex = Math.min(focusedIndex + 1, items.length - 1);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    focusedIndex = Math.max(focusedIndex - 1, 0);
+                } else if (e.key === 'Enter' && focusedIndex >= 0) {
+                    e.preventDefault();
+                    if (currentResults[focusedIndex]) selectPlace(currentResults[focusedIndex]);
+                } else if (e.key === 'Escape') {
+                    closeDropdown();
+                }
+                items.forEach((el, i) => el.classList.toggle('focused', i === focusedIndex));
+            });
+
+            searchInput.addEventListener('blur', () => setTimeout(closeDropdown, 150));
+
+            document.addEventListener('click', (e) => {
+                if (!document.getElementById('venueWrapper').contains(e.target)) closeDropdown();
+            });
+        })();
 
         // Handle logout
         function handleLogout(e) {

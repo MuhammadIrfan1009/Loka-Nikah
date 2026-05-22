@@ -115,7 +115,7 @@ a:hover { color: var(--dark); }
 button {
     font-family: 'Plus Jakarta Sans', sans-serif;
     transition: all 0.35s var(--ease-out);
-    cursor: pointer;
+    /* Removed cursor: pointer */
 }
 
 img { max-width: 100%; display: block; }
@@ -256,11 +256,21 @@ nav a.active {
 }
 nav a.active::after { display: none; }
 
+#userNameDisplay {
+    font-size: 0.87rem;
+    color: var(--dark);
+    padding: 0.45rem 1rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+}
+
 /* ==================== CONTAINER & LAYOUT ==================== */
 
-.container    { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
-.container-md { max-width: 800px;  margin: 0 auto; padding: 4rem 2rem; }
-.container-sm { max-width: 500px;  margin: 0 auto; padding: 4rem 2rem; }
+.container    { max-width: 1200px; margin: 0 auto; padding: 2rem 2rem; }
+.container-md { max-width: 800px;  margin: 0 auto; padding: 2rem 2rem; }
+.container-sm { max-width: 500px;  margin: 0 auto; padding: 2rem 2rem; }
 
 main { min-height: calc(100vh - 76px); }
 

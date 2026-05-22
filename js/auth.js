@@ -355,6 +355,10 @@ function updateNavbarUser() {
     const authLinksEl = document.getElementById('authLinks');
     const userMenuEl = document.getElementById('userMenu');
 
+    const heroActionButton = document.getElementById('heroActionButton');
+    const heroActionHint = document.getElementById('heroActionHint');
+    const hasRegisteredUsers = lokaAuth.users.length > 0;
+
     if (lokaAuth.isAuthenticated()) {
         const user = lokaAuth.getCurrentUser();
 
@@ -369,6 +373,16 @@ function updateNavbarUser() {
         if (userMenuEl) {
             userMenuEl.style.display = 'flex';
         }
+
+        if (heroActionButton) {
+            heroActionButton.textContent = 'Mulai Booking Sekarang';
+            heroActionButton.href = 'booking.html';
+        }
+
+        if (heroActionHint) {
+            heroActionHint.style.display = 'none';
+            heroActionHint.innerHTML = '';
+        }
     } else {
         if (userNameEl) {
             userNameEl.textContent = '';
@@ -380,6 +394,26 @@ function updateNavbarUser() {
 
         if (userMenuEl) {
             userMenuEl.style.display = 'none';
+        }
+
+        if (heroActionButton) {
+            if (hasRegisteredUsers) {
+                heroActionButton.textContent = 'Masuk Sekarang';
+                heroActionButton.href = 'login.html';
+            } else {
+                heroActionButton.textContent = 'Daftar Gratis Sekarang';
+                heroActionButton.href = 'register.html';
+            }
+        }
+
+        if (heroActionHint) {
+            if (hasRegisteredUsers) {
+                heroActionHint.style.display = 'block';
+                heroActionHint.innerHTML = 'Belum punya akun? <a href="register.html" style="color: inherit; text-decoration: underline;">Daftar Gratis</a>';
+            } else {
+                heroActionHint.style.display = 'none';
+                heroActionHint.innerHTML = '';
+            }
         }
     }
 }
