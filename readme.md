@@ -4,12 +4,14 @@ Website statis profesional untuk wedding planning service dengan sistem manajeme
 
 ## 📋 Deskripsi Project
 
-**LOKA NIKAH** adalah solusi digital modern untuk merencanakan pernikahan dengan mudah, transparan, dan elegan. Website ini menyediakan katalog vendor, sistem booking online, dan tracking progres persiapan pernikahan secara real-time.
+**LOKA NIKAH** adalah solusi digital modern untuk merencanakan pernikahan dengan mudah, transparan, dan elegan. Website ini menyediakan katalog vendor, sistem booking online dengan date & time picker interaktif, dan tracking progres persiapan pernikahan secara real-time.
 
 ### Core Features
 - ✅ Sistem autentikasi (Register & Login)
 - ✅ Katalog vendor lengkap dengan 6 layanan utama
-- ✅ Sistem booking online terintegrasi
+- ✅ Sistem booking online dengan modal date/time picker
+- ✅ Interactive calendar dengan status tanggal (tersedia/dibooking/dipilih)
+- ✅ Time picker dengan scroll interface (format 24 jam)
 - ✅ Timeline progress tracking
 - ✅ Local storage untuk data persistence
 - ✅ Responsive design (mobile-friendly)
@@ -37,7 +39,7 @@ loka-nikah-project/
 ├── login.html              (Halaman Login)
 ├── paket.html              (Katalog Layanan)
 ├── detail-paket.html       (Detail Vendor)
-├── booking.html            (Form Pemesanan)
+├── booking.html            (Form Pemesanan dengan Modal Pickers)
 ├── tracking.html           (Timeline Progres)
 │
 ├── css/
@@ -71,6 +73,8 @@ Untuk testing, gunakan akun demo:
 2. **Login** - User masuk ke akun mereka
 3. **Browse Layanan** - Lihat katalog vendor
 4. **Booking** - Lakukan pemesanan vendor
+   - Pilih tanggal menggunakan calendar modal
+   - Pilih jam menggunakan time picker dengan scroll
 5. **Tracking** - Pantau progress persiapan
 
 ## 🔧 Tech Stack
@@ -79,6 +83,7 @@ Untuk testing, gunakan akun demo:
 - **Styling**: CSS Variables, CSS Grid, CSS Flexbox
 - **Storage**: LocalStorage (Browser)
 - **Fonts**: Google Fonts (Cormorant Garamond, Plus Jakarta Sans)
+- **Icons**: Font Awesome, Bootstrap Icons, Emoji Unicode
 - **No Dependencies**: Pure vanilla JavaScript, tidak ada library eksternal
 
 ## 📄 File Descriptions
@@ -92,7 +97,7 @@ Untuk testing, gunakan akun demo:
 | `login.html` | Form login dengan demo account |
 | `paket.html` | Grid katalog 6 vendor layanan |
 | `detail-paket.html` | Halaman detail vendor dengan specs & features |
-| `booking.html` | Form booking komprehensif (4 steps) |
+| `booking.html` | Form booking dengan modal date/time picker |
 | `tracking.html` | Timeline progress dengan progress bar |
 
 ### CSS
@@ -102,6 +107,8 @@ Untuk testing, gunakan akun demo:
 - Global styles & resets
 - Component styles (cards, buttons, forms, etc)
 - Layout utilities (grid, flexbox)
+- Modal & overlay styles
+- Date picker & time picker styles
 - Animations & transitions
 - Responsive design
 - Print styles
@@ -127,6 +134,92 @@ Untuk testing, gunakan akun demo:
 - Helper functions untuk formatting dates & currency
 ```
 
+## 🎯 Fitur Utama
+
+### 1. Autentikasi
+- Registrasi dengan validasi email & phone
+- Login dengan session management
+- Password hashing (simple untuk demo)
+- Logout functionality
+
+### 2. Vendor Management
+- 6 kategori vendor layanan
+- Setiap vendor memiliki:
+  - Deskripsi lengkap
+  - Spesifikasi detail
+  - List fitur unggulan
+  - Price range
+
+### 3. Booking System dengan Modal Pickers
+
+#### Date Picker Modal
+Fitur date picker yang elegant dan intuitif:
+- **Modal Interface**: Muncul dari bawah dengan smooth animation
+- **Interactive Calendar**: 
+  - Navigasi bulan dengan tombol prev/next
+  - Tampilan lengkap 7 hari (Min-Sab)
+  - Status tanggal dengan visual indicators:
+    - 🟤 **Coklat**: Tanggal dipilih
+    - 🔴 **Merah**: Sudah dibooking orang lain
+    - ⚪ **Abu-abu muda**: Tersedia untuk booking
+    - ⚫ **Abu-abu gelap**: Tanggal yang sudah lewat (disabled)
+- **Sync dengan Hidden Input**: Pilihan tersimpan ke form
+- **Display Format**: Short format (e.g., "Rab, 15 Jan 2025")
+
+#### Time Picker Modal
+Time picker dengan scroll interface modern:
+- **Display Besar**: Clock display 2.2rem untuk visibility
+- **Period Indicator**: Otomatis menampilkan "Pagi", "Siang", "Sore", atau "Malam"
+- **Scroll Picker**:
+  - Jam: 0-23 (format 24 jam, bukan AM/PM)
+  - Menit: 0, 15, 30, 45 (increment 15 menit)
+- **Visual Feedback**:
+  - Active item berwarna primary dengan font lebih besar
+  - Center line untuk menunjukkan item terpilih
+  - Gradient overlay untuk effect blur
+- **Smooth Scroll**: Scroll behavior yang responsive
+- **Confirm Button**: Tombol untuk apply pilihan
+
+#### Unified Modal Design
+- Header dengan title dan close button
+- Smooth slide-up animation
+- Dark overlay dengan fade effect
+- Click outside untuk close
+- Consistent styling dengan color palette
+
+### 4. Form Booking
+Form booking komprehensif dengan 5 step:
+1. **Informasi Pengantin** (nama, pasangan, email, phone)
+2. **Rincian Acara** (tanggal, jam, lokasi, tamu, venue)
+3. **Paket Layanan** (6 pilihan vendor)
+4. **Informasi Tambahan** (tema, budget, catatan khusus)
+5. **Harga & Pembayaran** (estimasi harga, timeline pembayaran)
+
+**Smart Features**:
+- Auto-fill user data dari profile
+- Real-time price calculation
+- Budget validation
+- Package bundling dengan diskon 10%
+- Multi-select vendor support
+
+### 5. Progress Tracking
+- Timeline dengan 5 stages:
+  1. Konfirmasi Booking
+  2. Fitting & Konsultasi
+  3. Vendor Deal
+  4. Technical Meeting
+  5. Hari Pernikahan
+- Progress bar visual
+- Status indicators (Selesai/Ongoing/Menunggu)
+- Multiple booking support
+
+### 6. Responsive Design
+- Mobile-first approach
+- Breakpoints: 768px, 480px
+- Flexible grid layouts
+- Touch-friendly buttons
+- Modal optimization untuk mobile
+
 ## 💾 Data Structure
 
 ### User Object
@@ -145,14 +238,18 @@ Untuk testing, gunakan akun demo:
 ### Booking Object
 ```javascript
 {
-  id: "user_TIMESTAMP_RANDOM",
+  id: "booking_TIMESTAMP_RANDOM",
   userId: "user_id",
   names: "Pengantin 1",
   partner: "Pengantin 2",
   date: "YYYY-MM-DD",
+  time: "HH:MM",
   location: "Lokasi",
+  venue: "Nama Venue",
   guests: 200,
   packages: ["catering", "makeup"],
+  theme: "Minimalis Modern",
+  budget: "500000000",
   notes: "Catatan khusus",
   status: "confirmed",
   timeline: {
@@ -167,46 +264,6 @@ Untuk testing, gunakan akun demo:
 }
 ```
 
-## 🎯 Fitur Utama
-
-### 1. Autentikasi
-- Registrasi dengan validasi email & phone
-- Login dengan session management
-- Password hashing (simple untuk demo)
-- Logout functionality
-
-### 2. Vendor Management
-- 6 kategori vendor layanan
-- Setiap vendor memiliki:
-  - Deskripsi lengkap
-  - Spesifikasi detail
-  - List fitur unggulan
-  - Price range
-
-### 3. Booking System
-- Form booking 4-step
-- Validasi input komprehensif
-- Support multiple vendors
-- Auto-fill dari user profile
-- Notes untuk request khusus
-
-### 4. Progress Tracking
-- Timeline dengan 5 stages:
-  1. Konfirmasi Booking
-  2. Fitting & Konsultasi
-  3. Vendor Deal
-  4. Technical Meeting
-  5. Hari Pernikahan
-- Progress bar visual
-- Status indicators (Selesai/Ongoing/Menunggu)
-- Multiple booking support
-
-### 5. Responsive Design
-- Mobile-first approach
-- Breakpoints: 768px, 480px
-- Flexible grid layouts
-- Touch-friendly buttons
-
 ## 🎨 Customization
 
 ### Ubah Color Palette
@@ -217,6 +274,27 @@ Edit `:root` di `css/style.css`:
     --secondary: #D9CAB3;    /* Ubah warna secondary */
     --dark: #2D2926;         /* Ubah warna text */
     --light: #FFFFFF;        /* Ubah warna background */
+}
+```
+
+### Kustomisasi Date Picker
+Di `booking.html`, edit `initDatePicker()`:
+```javascript
+// Ubah format display
+const formatted = dateObj.toLocaleDateString('id-ID', {
+    weekday: 'short',  // ubah 'short' jadi 'long' untuk format panjang
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+});
+```
+
+### Kustomisasi Time Picker
+Di `booking.html`, edit `initTimePicker()`:
+```javascript
+// Ubah increment menit
+for (let m = 0; m < 60; m += 15) {  // ubah 15 ke nilai lain
+    // ...
 }
 ```
 
@@ -231,11 +309,6 @@ const vendorDatabase = {
     }
 };
 ```
-
-### Ubah Content
-- Edit text di masing-masing HTML file
-- Logo & branding bisa diganti di header section
-- Contact info di footer
 
 ## 🔒 Data Privacy
 
@@ -293,6 +366,7 @@ Website ini bisa di-deploy ke:
 3. Password hashing sangat simple (untuk demo saja)
 4. Tidak ada email verification
 5. Tidak ada payment integration
+6. Calendar hanya support 1 tahun ke depan (customizable)
 
 ## 📝 Saran Improvement
 
@@ -307,6 +381,10 @@ Untuk production deployment:
 8. [ ] Image optimization & CDN
 9. [ ] Security audit
 10. [ ] Performance optimization
+11. [ ] SMS notifications via WhatsApp API
+12. [ ] Calendar integration (Google Calendar, iCal)
+13. [ ] PDF invoice generation
+14. [ ] Automated reminders
 
 ## 📞 Support
 
@@ -317,7 +395,14 @@ Untuk production deployment:
 - **Instagram**: @lokanikah
 
 ### FAQ
-Lihat halaman `paket.html` untuk FAQ section
+- Q: Apakah data aman di simpan?
+  A: Data disimpan di browser Anda. Untuk keamanan maksimal, gunakan HTTPS dan jangan share browser.
+
+- Q: Bisa booking untuk berapa orang?
+  A: Bisa unlimited, minimal 50 tamu per acara.
+
+- Q: Apakah bisa change jadwal setelah booking?
+  A: Bisa, dengan menghubungi customer service kami.
 
 ## 📄 License
 
@@ -326,9 +411,22 @@ Project ini dibuat untuk keperluan demo & pembelajaran. Bebas untuk dimodifikasi
 ## 🙏 Credits
 
 - **Design System**: Earth-Modern Elegance aesthetic
-- **Typography**: Google Fonts
-- **Icons**: Emoji Unicode
-- **Inspiration**: Modern wedding planning services
+- **Typography**: Google Fonts (Cormorant Garamond, Plus Jakarta Sans)
+- **Icons**: Font Awesome, Bootstrap Icons, Emoji Unicode
+- **Interaction**: Modal design inspiration dari modern mobile apps
+- **Date/Time Picker**: Custom implementation dengan vanilla JavaScript
+
+## 🆕 Changelog
+
+### v1.1.0 (Latest)
+- ✨ **NEW**: Modal date picker dengan interactive calendar
+- ✨ **NEW**: Modal time picker dengan scroll interface (24-jam format)
+- 🎨 **IMPROVED**: UI/UX booking form lebih minimalis
+- 🐛 **FIXED**: Sync antara calendar dan form date input
+- 📱 **IMPROVED**: Mobile responsiveness untuk modal pickers
+
+### v1.0.0
+- Initial release dengan core features
 
 ---
 
